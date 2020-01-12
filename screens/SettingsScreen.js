@@ -1,66 +1,89 @@
-import React from 'react'
+import React from "react";
 
-import {View, ScrollView, Text, StyleSheet, Button, AsyncStorage, Switch, Alert} from 'react-native'
-import { LinearGradient } from 'expo-linear-gradient';
-import Icon from 'react-native-vector-icons/Ionicons';
+import {
+  View,
+  ScrollView,
+  Text,
+  StyleSheet,
+  Button,
+  AsyncStorage,
+  Switch,
+  Alert
+} from "react-native";
+import {LinearGradient} from "expo-linear-gradient";
+import Icon from "react-native-vector-icons/Ionicons";
 
 export default class SettingsScreen extends React.Component {
-
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
       isLoading: true,
       allowAdult: false
-    }
+    };
   }
 
   componentDidMount() {
-    AsyncStorage.getItem(
-      '@Settings:value'
-    ).then(value => {
+    AsyncStorage.getItem("@Settings:value").then(value => {
       this.setState({
         isLoading: false,
-        allowAdult: (value == 'true')
-      })
-      console.log('After Mounting(Settings): ', value)
-    })
+        allowAdult: value == "true"
+      });
+      console.log("After Mounting(Settings): ", value);
+    });
   }
 
   toggleSwitch(value) {
     //onValueChange of the switch this function will be called
-    console.log(value)
-    this.setState({allowAdult: value})
+    console.log(value);
+    this.setState({allowAdult: value});
 
-    AsyncStorage.setItem(
-      '@Settings:value',
-      value.toString()
-    )
-   }
+    AsyncStorage.setItem("@Settings:value", value.toString());
+  }
 
   static navigationOptions = ({navigation}) => {
     return {
-      title: 'Settings',
-      headerLeft: () => <Icon name="ios-menu" onPress={() => navigation.openDrawer()} style={{color: 'white', fontSize: 30, marginLeft: 10, marginTop: 5}}/>
-    }
-  }
+      title: "Settings",
+      headerLeft: () => (
+        <Icon
+          name="ios-menu"
+          onPress={() => navigation.openDrawer()}
+          style={{color: "white", fontSize: 30, marginLeft: 10, marginTop: 5}}
+        />
+      )
+    };
+  };
 
   render() {
-    if(this.state.isLoading) {
-      return <View></View>
+    if (this.state.isLoading) {
+      return <View></View>;
     } else {
-      return(
+      return (
         <ScrollView>
-          <View style={{alignItems: 'center', justifyContent: 'space-between', flexDirection: 'row', borderBottomColor: 'white', borderBottomWidth: '0.5', marginRight: 15, marginLeft: 15}}>
-            <Text style={{margin: 20, color: 'white', fontSize: 20}}>Setting 1</Text>
+          <View
+            style={{
+              alignItems: "center",
+              justifyContent: "space-between",
+              flexDirection: "row",
+              borderBottomColor: "white",
+              borderBottomWidth: "0.5",
+              marginRight: 15,
+              marginLeft: 15
+            }}
+          >
+            <Text style={{margin: 20, color: "white", fontSize: 20}}>
+              Setting 1
+            </Text>
             <Switch
               value={this.state.allowAdult}
-              onValueChange={(value) => {this.toggleSwitch(value)}}
-              style={{marginRight: 20}} />
+              onValueChange={value => {
+                this.toggleSwitch(value);
+              }}
+              style={{marginRight: 20}}
+            />
           </View>
         </ScrollView>
-
-      )
+      );
     }
   }
 }
@@ -74,10 +97,10 @@ var styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 18,
-    fontFamily: 'Gill Sans',
-    textAlign: 'center',
+    fontFamily: "Gill Sans",
+    textAlign: "center",
     margin: 10,
-    color: '#ffffff',
-    backgroundColor: 'transparent',
-  },
+    color: "#ffffff",
+    backgroundColor: "transparent"
+  }
 });

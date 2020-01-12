@@ -1,7 +1,7 @@
-export getAnimeInfo(id) {
+export function getInfo(id=1, type='ANIME') {
   var query = `
   query ($id: Int) {
-  Media (id: $id, type: ANIME) {
+  Media (id: $id, type: ${type}) {
     description
   }
 }
@@ -23,11 +23,11 @@ export getAnimeInfo(id) {
         })
     };
 
-  fetch(url, options).then(response => {
+  return fetch(url, options).then(response => {
     return response.json().then(function (json) {
         return response.ok ? json : Promise.reject(json);
     });
   })
-   .then(responseJson => return responseJson)
+   .then(responseJson => {return responseJson})
    .catch(e => console.log(e));
 }

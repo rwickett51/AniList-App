@@ -1,38 +1,41 @@
 //Import React
-import React from 'react'
+import React from "react";
 
 //Import React Components
-import {View, Text, StyleSheet} from 'react-native'
-import Icon from 'react-native-vector-icons/Ionicons';
+import {View, Text, StyleSheet} from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 
 export default class SettingsScreen extends React.Component {
-
   //Class Constructor
   constructor(props) {
-    super(props)
-    this.state = {
-    }
+    super(props);
+    this.state = {};
   }
 
   //Called After render(). Recalls render() when finished
-  componentDidMount() {
-  }
+  componentDidMount() {}
 
   //Header Options
   static navigationOptions = ({navigation}) => {
     return {
-      title: 'Template',
-      headerLeft: () => <Icon name="ios-menu" onPress={() => navigation.openDrawer()} style={{color: 'white', fontSize: 30, marginLeft: 10, marginTop: 5}}/>
-    }
-  }
+      title: "Template",
+      headerLeft: () => (
+        <Icon
+          name="ios-menu"
+          onPress={() => navigation.openDrawer()}
+          style={{color: "white", fontSize: 30, marginLeft: 10, marginTop: 5}}
+        />
+      )
+    };
+  };
 
   //Render Components to screen
   render() {
-    return(
-      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        <Text style={{color: 'grey'}}>Text</Text>
+    return (
+      <View style={{flex: 1, alignItems: "center", justifyContent: "center"}}>
+        <Text style={{color: "grey"}}>Text</Text>
       </View>
-    )
+    );
   }
 }
 
