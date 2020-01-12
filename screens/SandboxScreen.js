@@ -69,6 +69,49 @@ export default class SettingsScreen extends React.Component {
     };
   };
 
+  //Generate Horizontal Lists
+  horizontalList(data) {
+    return (
+      <ScrollView
+        horizontal={true}
+        style={styles.horizontalScroll}
+        nestedScrollEnabled
+        indicatorStyle="white"
+      >
+        {data.map(obj => {
+          return (
+            <TouchableOpacity
+              key={obj.id}
+              activeOpacity={0.5}
+              onPress={() =>
+                NavigationService.navigate("Details", {
+                  itemId: obj.id,
+                  title: obj.title.romaji,
+                  type: obj.type
+                })
+              }
+            >
+              <View style={styles.box}>
+                <Image
+                  source={{uri: obj.coverImage.large}}
+                  style={styles.img}
+                />
+              </View>
+              <View style={{flex: 1, marginTop: 10, width: 150}}>
+                <Text
+                  style={{alignSelf: "center", color: "white"}}
+                  numberOfLines={2}
+                >
+                  {obj.title.romaji}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          );
+        })}
+      </ScrollView>
+    );
+  }
+
   //Render Components to screen
   render() {
     if (this.state.isLoading) {
@@ -84,173 +127,29 @@ export default class SettingsScreen extends React.Component {
       return (
         <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
           <Text style={styles.headerText}>Trending Anime</Text>
-          <ScrollView
-            horizontal={true}
-            style={styles.horizontalScroll}
-            nestedScrollEnabled
-            indicatorStyle="white"
-          >
-            {this.state.topanimedata == null ? (
-              <ActivityIndicator />
-            ) : (
-              this.state.topanimedata.data.Page.media.map(obj => {
-                return (
-                  <TouchableOpacity
-                    key={obj.id}
-                    activeOpacity={0.5}
-                    onPress={() =>
-                      NavigationService.navigate("Details", {
-                        itemId: obj.id,
-                        title: obj.title.romaji,
-                        type: "ANIME"
-                      })
-                    }
-                  >
-                    <View style={styles.box}>
-                      <Image
-                        source={{uri: obj.coverImage.large}}
-                        style={styles.img}
-                      />
-                    </View>
-                    <View style={{flex: 1, marginTop: 10, width: 150}}>
-                      <Text
-                        style={{alignSelf: "center", color: "white"}}
-                        numberOfLines={2}
-                      >
-                        {obj.title.romaji}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                );
-              })
-            )}
-          </ScrollView>
+          {this.state.topanimedata == null ? (
+            <ActivityIndicator />
+          ) : (
+            this.horizontalList(this.state.topanimedata.data.Page.media)
+          )}
           <Text style={styles.headerText}>Most Popular Anime</Text>
-          <ScrollView
-            horizontal={true}
-            style={styles.horizontalScroll}
-            nestedScrollEnabled
-            indicatorStyle="white"
-          >
-            {this.state.trendinganimedata == null ? (
-              <ActivityIndicator />
-            ) : (
-              this.state.trendinganimedata.data.Page.media.map(obj => {
-                return (
-                  <TouchableOpacity
-                    key={obj.id}
-                    activeOpacity={0.5}
-                    onPress={() =>
-                      NavigationService.navigate("Details", {
-                        itemId: obj.id,
-                        title: obj.title.romaji,
-                        type: "ANIME"
-                      })
-                    }
-                  >
-                    <View style={styles.box}>
-                      <Image
-                        source={{uri: obj.coverImage.large}}
-                        style={styles.img}
-                      />
-                    </View>
-                    <View style={{flex: 1, marginTop: 10, width: 150}}>
-                      <Text
-                        style={{alignSelf: "center", color: "white"}}
-                        numberOfLines={2}
-                      >
-                        {obj.title.romaji}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                );
-              })
-            )}
-          </ScrollView>
+          {this.state.trendinganimedata == null ? (
+            <ActivityIndicator />
+          ) : (
+            this.horizontalList(this.state.trendinganimedata.data.Page.media)
+          )}
           <Text style={styles.headerText}>Trending Manga</Text>
-          <ScrollView
-            horizontal={true}
-            style={styles.horizontalScroll}
-            nestedScrollEnabled
-            indicatorStyle="white"
-          >
-            {this.state.topmangadata == null ? (
-              <ActivityIndicator />
-            ) : (
-              this.state.topmangadata.data.Page.media.map(obj => {
-                return (
-                  <TouchableOpacity
-                    key={obj.id}
-                    activeOpacity={0.5}
-                    onPress={() =>
-                      NavigationService.navigate("Details", {
-                        itemId: obj.id,
-                        title: obj.title.romaji,
-                        type: "MANGA"
-                      })
-                    }
-                  >
-                    <View style={styles.box}>
-                      <Image
-                        source={{uri: obj.coverImage.large}}
-                        style={styles.img}
-                      />
-                    </View>
-                    <View style={{flex: 1, marginTop: 10, width: 150}}>
-                      <Text
-                        style={{alignSelf: "center", color: "white"}}
-                        numberOfLines={2}
-                      >
-                        {obj.title.romaji}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                );
-              })
-            )}
-          </ScrollView>
+          {this.state.topmangadata == null ? (
+            <ActivityIndicator />
+          ) : (
+            this.horizontalList(this.state.topmangadata.data.Page.media)
+          )}
           <Text style={styles.headerText}>Most Popular Manga</Text>
-          <ScrollView
-            horizontal={true}
-            style={styles.horizontalScroll}
-            nestedScrollEnabled
-            indicatorStyle="white"
-          >
-            {this.state.trendingmangadata == null ? (
-              <ActivityIndicator />
-            ) : (
-              this.state.trendingmangadata.data.Page.media.map(obj => {
-                return (
-                  <TouchableOpacity
-                    key={obj.id}
-                    activeOpacity={0.5}
-                    onPress={() =>
-                      NavigationService.navigate("Details", {
-                        itemId: obj.id,
-                        title: obj.title.romaji,
-                        type: "MANGA"
-                      })
-                    }
-                  >
-                    <View style={styles.box}>
-                      <Image
-                        source={{uri: obj.coverImage.large}}
-                        style={styles.img}
-                      />
-                    </View>
-                    <View style={{flex: 1, marginTop: 10, width: 150}}>
-                      <Text
-                        style={{alignSelf: "center", color: "white"}}
-                        numberOfLines={2}
-                      >
-                        {obj.title.romaji}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                );
-              })
-            )}
-          </ScrollView>
+          {this.state.trendingmangadata == null ? (
+            <ActivityIndicator />
+          ) : (
+            this.horizontalList(this.state.trendingmangadata.data.Page.media)
+          )}
         </ScrollView>
       );
     }

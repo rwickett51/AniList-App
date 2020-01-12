@@ -41,6 +41,7 @@ export function getEntryinfo(type = "ANIME", sort = "POPULARITY_DESC") {
     Page(perPage: $perPage) {
       media (type: ${type}, sort: ${sort}){
         id
+        type
         coverImage {
           large
         }
