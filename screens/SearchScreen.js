@@ -65,7 +65,7 @@ export default class SettingsScreen extends React.Component {
     var variables = {
         search: this.state.search,
         page: 1,
-        perPage: 3
+        perPage: 5
     };
 
     var url = 'https://graphql.anilist.co',
@@ -119,30 +119,29 @@ export default class SettingsScreen extends React.Component {
           autoFocus
           clearButtonMode={'always'}/>
         </View>
-        <ScrollView style={{marginTop: 20}}>
+        <ScrollView>
+        <Text style={{color: 'white', marginLeft: 20, fontSize: 20, marginTop: 20}}>Anime</Text>
+        <View style={{backgroundColor: 'white', height: 1, width: '100%', margin: 10}}></View>
         <View>{this.state.animedata == null  ? <Text>''</Text> : this.state.animedata.data.Page.media.map(obj =>
           <TouchableOpacity key={obj.id} activeOpacity={0.5}
             onPress={() => NavigationService.navigate('Details', {itemId: obj.id, title: obj.title.romaji, type: 'ANIME'})}>
             <View style={{flexDirection: 'row'}}>
               <Image source={{uri: obj.coverImage.large}} style={styles.img}/>
-              <Text style={{color: 'white'}}>{obj.title.romaji}</Text>
+              <Text style={{color: 'white', marginTop: 15, marginLeft: 15}}>{obj.title.romaji}</Text>
             </View>
-            <View style={{backgroundColor: 'white', height: 1, width: '100%', margin: 10}}></View>
           </TouchableOpacity>
-
         )}</View>
+        <Text style={{color: 'white', marginLeft: 20, fontSize: 20, marginTop: 10}}>Manga</Text>
+        <View style={{backgroundColor: 'white', height: 1, width: '100%', margin: 10}}></View>
         <View>{this.state.mangadata == null  ? <Text>''</Text> : this.state.mangadata.data.Page.media.map(obj =>
           <TouchableOpacity key={obj.id} activeOpacity={0.5}
             onPress={() => NavigationService.navigate('Details', {itemId: obj.id, title: obj.title.romaji, type: 'MANGA'})}>
             <View style={{flexDirection: 'row'}}>
               <Image source={{uri: obj.coverImage.large}} style={styles.img}/>
-              <Text style={{color: 'white'}}>{obj.title.romaji}</Text>
+              <Text style={{color: 'white', marginTop: 15, marginLeft: 15}}>{obj.title.romaji}</Text>
             </View>
-            <View style={{backgroundColor: 'white', height: 1, width: '100%', margin: 10}}></View>
           </TouchableOpacity>
-
         )}</View>
-
         </ScrollView>
       </SafeAreaView>
     )
@@ -162,5 +161,6 @@ var styles = StyleSheet.create({
     height: 100,
     width: 50,
     marginLeft: 20,
+    marginTop: 15,
   },
 });

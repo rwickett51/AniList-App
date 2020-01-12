@@ -5,6 +5,7 @@ import { createStackNavigator } from 'react-navigation-stack';
 import { LinearGradient } from 'expo-linear-gradient';
 import Home from './HomeScreen.js'
 import NavigationService from '../services/NavigationService.js';
+import {getAnimeInfo} from '../services/AniListQueryService.js';
 
 const anilist = require('anilist-node');
 const Anilist = new anilist();
@@ -38,9 +39,6 @@ function build(data) {
     <ScrollView style={{flex: 1}}>
       <View style={styles.header}>
         {bannerImg}
-      </View>
-      <View style={{flexDirection: 'row'}}>
-        <Image source={{uri: data.coverImage.large}} style={styles.img}/>
       </View>
     </ScrollView>
   )
@@ -117,6 +115,7 @@ export default class DescriptionScreen extends React.Component {
           isLoading: false,
           data: responseJson,
         })
+
       })
     else if (this.state.type === 'MANGA')
       return Anilist.media.manga(parseInt(this.state.id)).then(response => {
