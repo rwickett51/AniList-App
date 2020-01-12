@@ -13,7 +13,6 @@ import NavigationService from "../services/NavigationService.js";
 import DescriptionScreen from "../screens/DescriptionScreen.js";
 import HomeScreen from "../screens/HomeScreen.js";
 import SettingsScreen from "../screens/SettingsScreen.js";
-import SandboxScreen from "../screens/SandboxScreen.js";
 import SearchScreen from "../screens/SearchScreen.js";
 import TemplateScreen from "../screens/TemplateScreen.js";
 
@@ -25,7 +24,7 @@ const Settings = createStackNavigator({
 
 const Navigator = createStackNavigator({
   Sandbox: {
-    screen: SandboxScreen
+    screen: HomeScreen
   },
   Details: {
     screen: DescriptionScreen
