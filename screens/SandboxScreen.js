@@ -14,6 +14,7 @@ import {
 } from "react-native";
 import {LinearGradient} from "expo-linear-gradient";
 import Icon from "react-native-vector-icons/Ionicons";
+import {getEntryinfo} from "../services/AniListQueryService.js";
 
 //Import Services
 import NavigationService from "../services/NavigationService.js";
@@ -24,234 +25,27 @@ export default class SettingsScreen extends React.Component {
     super(props);
     this.state = {
       isLoading: true,
-      seed: 1,
       topanimedata: null,
       trendinganimedata: null,
       topmangadata: null,
-      trendingmangadata: null,
-      searchResponseData: null
+      trendingmangadata: null
     };
   }
 
   //Called After render(). Recalls render() when finished
   componentDidMount() {
-    if (this.state.topanimedata === null) {
-      this.UIUpdate();
-    }
-
-    //this.updateSearchRecommendations()
-  }
-
-  UIUpdate() {
-    var query = `
-    query ($id: Int){
-      Page(page: 1, perPage: 30) {
-        pageInfo {
-          total
-          currentPage
-          lastPage
-          hasNextPage
-          perPage
-        }
-        media(id: $id, sort: POPULARITY_DESC) {
-          id
-          coverImage {
-            large
-          }
-          title {
-            english
-            native
-            romaji
-          }
-        }
-      }
-    }
-    `;
-
-    var url = "https://graphql.anilist.co",
-      options = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json"
-        },
-        body: JSON.stringify({
-          query: query
-        })
-      };
-
-    fetch(url, options)
-      .then(response => {
-        return response.json().then(function(json) {
-          return response.ok ? json : Promise.reject(json);
-        });
-      })
-      .then(responseJson => {
-        this.setState({
-          topanimedata: responseJson
-        });
-        var query = `
-      query ($id: Int){
-        Page(page: 1, perPage: 30) {
-          pageInfo {
-            total
-            currentPage
-            lastPage
-            hasNextPage
-            perPage
-          }
-          media(id: $id, sort: TRENDING_DESC) {
-            id
-            coverImage {
-              large
-            }
-            title {
-              english
-              native
-              romaji
-            }
-          }
-        }
-      }
-      `;
-
-        var url = "https://graphql.anilist.co",
-          options = {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json"
-            },
-            body: JSON.stringify({
-              query: query
-            })
-          };
-
-        fetch(url, options)
-          .then(response => {
-            return response.json().then(function(json) {
-              return response.ok ? json : Promise.reject(json);
-            });
-          })
-          .then(responseJson => {
-            this.setState({
-              trendinganimedata: responseJson
-            });
-            var query = `
-        query ($id: Int){
-          Page(page: 1, perPage: 30) {
-            pageInfo {
-              total
-              currentPage
-              lastPage
-              hasNextPage
-              perPage
-            }
-            media(id: $id, sort: POPULARITY_DESC, type: MANGA) {
-              id
-              coverImage {
-                large
-              }
-              title {
-                english
-                native
-                romaji
-              }
-            }
-          }
-        }
-        `;
-
-            var url = "https://graphql.anilist.co",
-              options = {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                  Accept: "application/json"
-                },
-                body: JSON.stringify({
-                  query: query
-                })
-              };
-
-            fetch(url, options)
-              .then(response => {
-                return response.json().then(function(json) {
-                  return response.ok ? json : Promise.reject(json);
-                });
-              })
-              .then(responseJson => {
-                this.setState({
-                  topmangadata: responseJson
-                });
-                var query = `
-          query ($id: Int){
-            Page(page: 1, perPage: 30) {
-              pageInfo {
-                total
-                currentPage
-                lastPage
-                hasNextPage
-                perPage
-              }
-              media(id: $id, sort: TRENDING_DESC, type: MANGA) {
-                id
-                coverImage {
-                  large
-                }
-                title {
-                  english
-                  native
-                  romaji
-                }
-              }
-            }
-          }
-          `;
-
-                var url = "https://graphql.anilist.co",
-                  options = {
-                    method: "POST",
-                    headers: {
-                      "Content-Type": "application/json",
-                      Accept: "application/json"
-                    },
-                    body: JSON.stringify({
-                      query: query
-                    })
-                  };
-
-                fetch(url, options)
-                  .then(response => {
-                    return response.json().then(function(json) {
-                      return response.ok ? json : Promise.reject(json);
-                    });
-                  })
-                  .then(responseJson => {
-                    this.setState({
-                      isLoading: false,
-                      trendingmangadata: responseJson
-                    });
-                  })
-                  .catch(error => {
-                    alert("Error, check console");
-                    console.error(error);
-                  });
-              })
-              .catch(error => {
-                alert("Error, check console");
-                console.error(error);
-              });
-          })
-          .catch(error => {
-            alert("Error, check console");
-            console.error(error);
-          });
-      })
-      .catch(error => {
-        alert("Error, check console");
-        console.error(error);
-      });
+    getEntryinfo("ANIME", "POPULARITY_DESC").then(data =>
+      this.setState({isLoading: false, topanimedata: data})
+    );
+    getEntryinfo("ANIME", "TRENDING_DESC").then(data =>
+      this.setState({isLoading: false, trendinganimedata: data})
+    );
+    getEntryinfo("MANGA", "POPULARITY_DESC").then(data =>
+      this.setState({isLoading: false, topmangadata: data})
+    );
+    getEntryinfo("MANGA", "TRENDING_DESC").then(data =>
+      this.setState({isLoading: false, trendingmangadata: data})
+    );
   }
 
   //Header Options
@@ -287,124 +81,6 @@ export default class SettingsScreen extends React.Component {
         </View>
       );
     } else {
-      let topanime = this.state.topanimedata.data.Page.media.map(obj => {
-        return (
-          <TouchableOpacity
-            key={obj.id}
-            activeOpacity={0.5}
-            onPress={() =>
-              NavigationService.navigate("Details", {
-                itemId: obj.id,
-                title: obj.title.romaji,
-                type: "ANIME"
-              })
-            }
-          >
-            <View style={styles.box}>
-              <Image source={{uri: obj.coverImage.large}} style={styles.img} />
-            </View>
-            <View style={{flex: 1, marginTop: 10, width: 150}}>
-              <Text
-                style={{alignSelf: "center", color: "white"}}
-                numberOfLines={2}
-              >
-                {obj.title.romaji}
-              </Text>
-            </View>
-          </TouchableOpacity>
-        );
-      });
-      let trendinganime = this.state.trendinganimedata.data.Page.media.map(
-        obj => {
-          return (
-            <TouchableOpacity
-              key={obj.id}
-              activeOpacity={0.5}
-              onPress={() =>
-                NavigationService.navigate("Details", {
-                  itemId: obj.id,
-                  title: obj.title.romaji,
-                  type: "ANIME"
-                })
-              }
-            >
-              <View style={styles.box}>
-                <Image
-                  source={{uri: obj.coverImage.large}}
-                  style={styles.img}
-                />
-              </View>
-              <View style={{flex: 1, marginTop: 10, width: 150}}>
-                <Text
-                  style={{alignSelf: "center", color: "white"}}
-                  numberOfLines={2}
-                >
-                  {obj.title.romaji}
-                </Text>
-              </View>
-            </TouchableOpacity>
-          );
-        }
-      );
-      let topmanga = this.state.topmangadata.data.Page.media.map(obj => {
-        return (
-          <TouchableOpacity
-            key={obj.id}
-            activeOpacity={0.5}
-            onPress={() =>
-              NavigationService.navigate("Details", {
-                itemId: obj.id,
-                title: obj.title.romaji,
-                type: "MANGA"
-              })
-            }
-          >
-            <View style={styles.box}>
-              <Image source={{uri: obj.coverImage.large}} style={styles.img} />
-            </View>
-            <View style={{flex: 1, marginTop: 10, width: 150}}>
-              <Text
-                style={{alignSelf: "center", color: "white"}}
-                numberOfLines={2}
-              >
-                {obj.title.romaji}
-              </Text>
-            </View>
-          </TouchableOpacity>
-        );
-      });
-      let trendingmanga = this.state.trendingmangadata.data.Page.media.map(
-        obj => {
-          return (
-            <TouchableOpacity
-              key={obj.id}
-              activeOpacity={0.5}
-              onPress={() =>
-                NavigationService.navigate("Details", {
-                  itemId: obj.id,
-                  title: obj.title.romaji,
-                  type: "MANGA"
-                })
-              }
-            >
-              <View style={styles.box}>
-                <Image
-                  source={{uri: obj.coverImage.large}}
-                  style={styles.img}
-                />
-              </View>
-              <View style={{flex: 1, marginTop: 10, width: 150}}>
-                <Text
-                  style={{alignSelf: "center", color: "white"}}
-                  numberOfLines={2}
-                >
-                  {obj.title.romaji}
-                </Text>
-              </View>
-            </TouchableOpacity>
-          );
-        }
-      );
       return (
         <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
           <Text style={styles.headerText}>Trending Anime</Text>
@@ -414,7 +90,40 @@ export default class SettingsScreen extends React.Component {
             nestedScrollEnabled
             indicatorStyle="white"
           >
-            {topanime}
+            {this.state.topanimedata == null ? (
+              <ActivityIndicator />
+            ) : (
+              this.state.topanimedata.data.Page.media.map(obj => {
+                return (
+                  <TouchableOpacity
+                    key={obj.id}
+                    activeOpacity={0.5}
+                    onPress={() =>
+                      NavigationService.navigate("Details", {
+                        itemId: obj.id,
+                        title: obj.title.romaji,
+                        type: "ANIME"
+                      })
+                    }
+                  >
+                    <View style={styles.box}>
+                      <Image
+                        source={{uri: obj.coverImage.large}}
+                        style={styles.img}
+                      />
+                    </View>
+                    <View style={{flex: 1, marginTop: 10, width: 150}}>
+                      <Text
+                        style={{alignSelf: "center", color: "white"}}
+                        numberOfLines={2}
+                      >
+                        {obj.title.romaji}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                );
+              })
+            )}
           </ScrollView>
           <Text style={styles.headerText}>Most Popular Anime</Text>
           <ScrollView
@@ -423,7 +132,40 @@ export default class SettingsScreen extends React.Component {
             nestedScrollEnabled
             indicatorStyle="white"
           >
-            {trendinganime}
+            {this.state.trendinganimedata == null ? (
+              <ActivityIndicator />
+            ) : (
+              this.state.trendinganimedata.data.Page.media.map(obj => {
+                return (
+                  <TouchableOpacity
+                    key={obj.id}
+                    activeOpacity={0.5}
+                    onPress={() =>
+                      NavigationService.navigate("Details", {
+                        itemId: obj.id,
+                        title: obj.title.romaji,
+                        type: "ANIME"
+                      })
+                    }
+                  >
+                    <View style={styles.box}>
+                      <Image
+                        source={{uri: obj.coverImage.large}}
+                        style={styles.img}
+                      />
+                    </View>
+                    <View style={{flex: 1, marginTop: 10, width: 150}}>
+                      <Text
+                        style={{alignSelf: "center", color: "white"}}
+                        numberOfLines={2}
+                      >
+                        {obj.title.romaji}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                );
+              })
+            )}
           </ScrollView>
           <Text style={styles.headerText}>Trending Manga</Text>
           <ScrollView
@@ -432,7 +174,40 @@ export default class SettingsScreen extends React.Component {
             nestedScrollEnabled
             indicatorStyle="white"
           >
-            {topmanga}
+            {this.state.topmangadata == null ? (
+              <ActivityIndicator />
+            ) : (
+              this.state.topmangadata.data.Page.media.map(obj => {
+                return (
+                  <TouchableOpacity
+                    key={obj.id}
+                    activeOpacity={0.5}
+                    onPress={() =>
+                      NavigationService.navigate("Details", {
+                        itemId: obj.id,
+                        title: obj.title.romaji,
+                        type: "MANGA"
+                      })
+                    }
+                  >
+                    <View style={styles.box}>
+                      <Image
+                        source={{uri: obj.coverImage.large}}
+                        style={styles.img}
+                      />
+                    </View>
+                    <View style={{flex: 1, marginTop: 10, width: 150}}>
+                      <Text
+                        style={{alignSelf: "center", color: "white"}}
+                        numberOfLines={2}
+                      >
+                        {obj.title.romaji}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                );
+              })
+            )}
           </ScrollView>
           <Text style={styles.headerText}>Most Popular Manga</Text>
           <ScrollView
@@ -441,7 +216,40 @@ export default class SettingsScreen extends React.Component {
             nestedScrollEnabled
             indicatorStyle="white"
           >
-            {trendingmanga}
+            {this.state.trendingmangadata == null ? (
+              <ActivityIndicator />
+            ) : (
+              this.state.trendingmangadata.data.Page.media.map(obj => {
+                return (
+                  <TouchableOpacity
+                    key={obj.id}
+                    activeOpacity={0.5}
+                    onPress={() =>
+                      NavigationService.navigate("Details", {
+                        itemId: obj.id,
+                        title: obj.title.romaji,
+                        type: "MANGA"
+                      })
+                    }
+                  >
+                    <View style={styles.box}>
+                      <Image
+                        source={{uri: obj.coverImage.large}}
+                        style={styles.img}
+                      />
+                    </View>
+                    <View style={{flex: 1, marginTop: 10, width: 150}}>
+                      <Text
+                        style={{alignSelf: "center", color: "white"}}
+                        numberOfLines={2}
+                      >
+                        {obj.title.romaji}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                );
+              })
+            )}
           </ScrollView>
         </ScrollView>
       );
