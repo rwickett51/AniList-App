@@ -14,6 +14,7 @@ import {
 } from "react-native";
 import {List, ListItem} from "react-native-elements";
 import Icon from "react-native-vector-icons/Ionicons";
+import {searchRecommendations} from "../services/AniListQueryService.js";
 
 import NavigationService from "../services/NavigationService.js";
 
@@ -44,66 +45,17 @@ export default class SettingsScreen extends React.Component {
       search: value.toString()
     });
     if (this.state.search.length >= 2) {
-      this.updateSearchRecommendations();
-      this.updateSearchRecommendations("MANGA");
+      this.updateSearchRecommendations(value.toString());
     }
   }
 
-  updateSearchRecommendations(mediatype = "ANIME") {
-    var query = `
-    query ($page: Int, $perPage: Int, $search: String) {
-      Page (page: $page, perPage: $perPage) {
-        media (search: $search, type: ${mediatype}) {
-          id
-          coverImage {
-            large
-          }
-          title {
-            romaji
-          }
-        }
-      }
-    }
-    `;
-    console.log(mediatype);
-
-    var variables = {
-      search: this.state.search,
-      page: 1,
-      perPage: 5
-    };
-
-    var url = "https://graphql.anilist.co",
-      options = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json"
-        },
-        body: JSON.stringify({
-          query: query,
-          variables: variables
-        })
-      };
-
-    fetch(url, options)
-      .then(response => {
-        return response.json().then(function(json) {
-          return response.ok ? json : Promise.reject(json);
-        });
-      })
-      .then(responseJson => {
-        if (mediatype === "ANIME") {
-          this.setState({
-            animedata: responseJson
-          });
-        } else if (mediatype === "MANGA") {
-          this.setState({
-            mangadata: responseJson
-          });
-        }
-        console.log(responseJson);
-      });
+  updateSearchRecommendations(search) {
+    searchRecommendations("ANIME", search).then(data =>
+      this.setState({animedata: data})
+    );
+    searchRecommendations("MANGA", search).then(data =>
+      this.setState({mangadata: data})
+    );
   }
 
   //Render Components to screen

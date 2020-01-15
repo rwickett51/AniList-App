@@ -9,7 +9,8 @@ import {
   Dimensions,
   ScrollView,
   Alert,
-  AsyncStorage
+  AsyncStorage,
+  TouchableOpacity
 } from "react-native";
 import {createAppContainer} from "react-navigation";
 import {createStackNavigator} from "react-navigation-stack";
@@ -58,30 +59,102 @@ export default class DescriptionScreen extends React.Component {
       this.props.navigation.state.params.itemId,
       this.props.navigation.state.params.type
     ).then(data => this.setState({data: data, isLoading: false}));
-
-    AsyncStorage.getItem("@Settings:value").then(value => {
-      console.log("After Mounting(Description): ", value);
-    });
   }
 
   render() {
     if (this.state.isLoading) {
-      let itemId = this.props.navigation.state.params.itemId;
       return (
-        <View
-          adjustsFontSizeToFit="true"
-          numberOfLines={2}
-          style={{flex: 1, alignItems: "center", justifyContent: "center"}}
-        >
+        <View style={{flex: 1, alignItems: "center", justifyContent: "center"}}>
           <ActivityIndicator />
         </View>
       );
     } else {
+      let data = this.state.data.data.Media;
       return (
         <ScrollView style={{flex: 1}}>
-          <Text style={{color: "white"}}>
-            {this.state.data.data.Media.description.replace(/<br>/g, "")}
+          <View>
+            {data.bannerImage == null ? (
+              <View style={styles.bannerimg}></View>
+            ) : (
+              <Image
+                source={{uri: data.bannerImage}}
+                style={styles.bannerimg}
+              />
+            )}
+          </View>
+          <Image
+            source={{uri: data.coverImage.large}}
+            style={styles.coverImg}
+          />
+          <Text style={styles.title}>{data.title.romaji}</Text>
+          <Text
+            style={{
+              marginLeft: 10,
+              marginTop: 30,
+              color: "white",
+              fontSize: 15
+            }}
+          >
+            Recomendations
           </Text>
+          <ScrollView
+            horizontal={true}
+            style={styles.horizontalScroll}
+            nestedScrollEnabled
+            indicatorStyle="white"
+          >
+            {data == null ? (
+              <Text>Placeholder</Text>
+            ) : (
+              data.relations.edges.map(obj => {
+                return (
+                  <View
+                    key={obj.id}
+                    style={{margin: 10, height: 200, width: 105}}
+                  >
+                    <TouchableOpacity
+                      activeOpacity={0.5}
+                      onPress={() =>
+                        NavigationService.navigate(
+                          "Details",
+                          {
+                            itemId: obj.node.id,
+                            title: obj.node.title.romaji,
+                            type: obj.node.type
+                          },
+                          obj.id
+                        )
+                      }
+                    >
+                      <Image
+                        style={styles.recommendationImg}
+                        source={{uri: obj.node.coverImage.large}}
+                      />
+                      <Text
+                        style={{
+                          color: "white",
+                          fontSize: 10,
+                          alignSelf: "center"
+                        }}
+                        numberOfLines={2}
+                      >
+                        {obj.node.title.romaji}
+                      </Text>
+                      <Text
+                        style={{
+                          color: "white",
+                          fontSize: 10,
+                          alignSelf: "center"
+                        }}
+                      >
+                        {obj.relationType.toString()}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                );
+              })
+            )}
+          </ScrollView>
         </ScrollView>
       );
     }
@@ -89,35 +162,28 @@ export default class DescriptionScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  img: {
-    height: 142,
-    width: 100,
-    borderColor: "black",
-    borderWidth: 2,
-    marginLeft: 20,
-    top: 80
+  coverImg: {
+    height: 200,
+    width: 140,
+    resizeMode: "cover",
+    alignSelf: "center",
+    marginTop: 170,
+    borderWidth: 5
   },
   bannerimg: {
     position: "absolute",
-    height: 150,
+    height: 200,
     resizeMode: "cover",
     flex: 1,
     top: 0,
     right: 0,
     left: 0
   },
-  statusButton: {
-    backgroundColor: "red"
-  },
-  header: {
-    flex: 1
-  },
   title: {
     color: "white",
-    fontWeight: "bold",
-    fontSize: 0.045 * Dimensions.get("window").width,
-    paddingLeft: 10,
-    flexWrap: "wrap",
-    paddingEnd: "30%"
-  }
+    alignSelf: "center",
+    fontSize: 20,
+    margin: 10
+  },
+  recommendationImg: {height: 150, width: 105}
 });
