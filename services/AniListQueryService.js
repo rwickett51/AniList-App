@@ -12,6 +12,12 @@ export function getInfo(id = 1, type = "ANIME") {
       title {
         romaji
       }
+      description
+      averageScore
+      genres
+      episodes
+      chapters
+      volumes
       relations {
         edges {
           node {
@@ -55,6 +61,7 @@ export function getInfo(id = 1, type = "ANIME") {
       });
     })
     .then(responseJson => {
+      console.log(responseJson);
       return responseJson;
     })
     .catch(e => console.log(e));

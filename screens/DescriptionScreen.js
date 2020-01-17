@@ -18,6 +18,7 @@ import {LinearGradient} from "expo-linear-gradient";
 import Home from "./HomeScreen.js";
 import NavigationService from "../services/NavigationService.js";
 import {getInfo} from "../services/AniListQueryService.js";
+import HorizontalList from "../components/HorizontalList.js";
 
 export default class DescriptionScreen extends React.Component {
   constructor(props) {
@@ -87,6 +88,33 @@ export default class DescriptionScreen extends React.Component {
             style={styles.coverImg}
           />
           <Text style={styles.title}>{data.title.romaji}</Text>
+          <View>
+            <Text style={{color: "white"}}>Rating {data.averageScore}/100</Text>
+            <View style={{flexDirection: "row"}}>
+              <Text style={{color: "white"}}>Genres: </Text>
+              {data.genres.map(obj => {
+                return <Text style={{color: "white"}}>{obj}, </Text>;
+              })}
+            </View>
+
+            {this.props.navigation.state.params.type == "ANIME" ? (
+              <Text style={{color: "white"}}>Episodes: {data.episodes}</Text>
+            ) : (
+              <View>
+                <Text style={{color: "white"}}>Volumes: {data.volumes}</Text>
+                <Text style={{color: "white"}}>Chapters: {data.chapters}</Text>
+              </View>
+            )}
+          </View>
+
+          <View style={styles.description}>
+            <Text style={{color: "white"}}>
+              {data.description == null
+                ? ""
+                : data.description.replace(/<[^>]*>?/gm, "")}
+            </Text>
+          </View>
+
           <Text
             style={{
               marginLeft: 10,
@@ -95,66 +123,9 @@ export default class DescriptionScreen extends React.Component {
               fontSize: 15
             }}
           >
-            Recomendations
+            Related
           </Text>
-          <ScrollView
-            horizontal={true}
-            style={styles.horizontalScroll}
-            nestedScrollEnabled
-            indicatorStyle="white"
-          >
-            {data == null ? (
-              <Text>Placeholder</Text>
-            ) : (
-              data.relations.edges.map(obj => {
-                return (
-                  <View
-                    key={obj.id}
-                    style={{margin: 10, height: 200, width: 105}}
-                  >
-                    <TouchableOpacity
-                      activeOpacity={0.5}
-                      onPress={() =>
-                        NavigationService.navigate(
-                          "Details",
-                          {
-                            itemId: obj.node.id,
-                            title: obj.node.title.romaji,
-                            type: obj.node.type
-                          },
-                          obj.id
-                        )
-                      }
-                    >
-                      <Image
-                        style={styles.recommendationImg}
-                        source={{uri: obj.node.coverImage.large}}
-                      />
-                      <Text
-                        style={{
-                          color: "white",
-                          fontSize: 10,
-                          alignSelf: "center"
-                        }}
-                        numberOfLines={2}
-                      >
-                        {obj.node.title.romaji}
-                      </Text>
-                      <Text
-                        style={{
-                          color: "white",
-                          fontSize: 10,
-                          alignSelf: "center"
-                        }}
-                      >
-                        {obj.relationType.toString()}
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                );
-              })
-            )}
-          </ScrollView>
+          <HorizontalList data={data} />
         </ScrollView>
       );
     }
@@ -185,5 +156,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
     margin: 10
   },
-  recommendationImg: {height: 150, width: 105}
+  recommendationImg: {height: 150, width: 105},
+  description: {
+    marginLeft: 15,
+    marginRight: 15
+  }
 });
