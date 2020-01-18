@@ -6,6 +6,9 @@ import {View, Text, StyleSheet, AsyncStorage} from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import {WebView} from "react-native-webview";
 
+//Services
+import NavigationService from "../services/NavigationService.js";
+
 export default class SettingsScreen extends React.Component {
   //Class Constructor
   constructor(props) {
@@ -59,6 +62,7 @@ export default class SettingsScreen extends React.Component {
   //Render Components to screen
   render() {
     if (!this.state.showWeb) {
+      NavigationService.navigate("Home");
       return (
         <View style={{flex: 1, alignItems: "center", justifyContent: "center"}}>
           <Text style={{color: "grey"}}>Text</Text>

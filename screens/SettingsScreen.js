@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import {LinearGradient} from "expo-linear-gradient";
 import Icon from "react-native-vector-icons/Ionicons";
+import {addEntryToList} from "../services/AniListQueryService.js";
 
 export default class SettingsScreen extends React.Component {
   constructor(props) {
@@ -82,6 +83,7 @@ export default class SettingsScreen extends React.Component {
               style={{marginRight: 20}}
             />
           </View>
+          <Button title="Test" onPress={() => addEntryToList()} />
         </ScrollView>
       );
     }

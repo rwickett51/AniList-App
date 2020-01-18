@@ -158,6 +158,39 @@ export function searchRecommendations(mediatype = "ANIME", search) {
   });
 }
 
-export function addEntryToList() {
-  AysncStorage.getItem("@AccessToken:key").then(ley => {});
+export function addEntryToList(medidId, status) {
+  AsyncStorage.getItem("@AccessToken:key").then(accessToken => {
+    let query = `
+      mutation ($mediaId: Int, $status: MediaListStatus) {
+        SaveMediaListEntry (mediaId: $mediaId, status: $status) {
+          id
+          status
+        }
+      }
+    `;
+
+    let variables = {
+      mediaId: 1,
+      status: "CURRENT"
+    };
+
+    let url = "https://graphql.anilist.co",
+      options = {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + accessToken,
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        },
+        body: JSON.stringify({
+          query: query,
+          variables: variables
+        })
+      };
+    fetch(url, options)
+      .then(response => {
+        console.log(response);
+      })
+      .catch(error => console.log("error"));
+  });
 }

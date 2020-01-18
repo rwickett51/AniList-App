@@ -31,10 +31,6 @@ export default class SettingsScreen extends React.Component {
       topmangadata: null,
       trendingmangadata: null
     };
-
-    AsyncStorage.getItem("@AccessToken:key").then(value => {
-      console.log(value);
-    });
   }
 
   //Called After render(). Recalls render() when finished
