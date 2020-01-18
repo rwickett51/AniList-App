@@ -51,8 +51,7 @@ const DrawerStack = createDrawerNavigator(
   {
     Home: {screen: Navigator},
     Settings: {screen: Settings},
-    Login: {screen: Login},
-    Template: {screen: Template}
+    Login: {screen: Login}
   },
   {
     initialRouteName: "Home"

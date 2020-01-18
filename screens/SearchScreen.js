@@ -14,7 +14,11 @@ import {
 } from "react-native";
 import {List, ListItem} from "react-native-elements";
 import Icon from "react-native-vector-icons/Ionicons";
-import {searchRecommendations} from "../services/AniListQueryService.js";
+import {
+  searchMediaRecommendations,
+  searchStaffRecommendations,
+  searchCharacterRecommendations
+} from "../services/AniListQueryService.js";
 
 import NavigationService from "../services/NavigationService.js";
 
@@ -25,7 +29,9 @@ export default class SettingsScreen extends React.Component {
     this.state = {
       search: "",
       animedata: null,
-      mangadata: null
+      mangadata: null,
+      staffdata: null,
+      characterdata: null
     };
   }
 
@@ -50,11 +56,17 @@ export default class SettingsScreen extends React.Component {
   }
 
   updateSearchRecommendations(search) {
-    searchRecommendations("ANIME", search).then(data =>
+    searchMediaRecommendations("ANIME", search).then(data =>
       this.setState({animedata: data})
     );
-    searchRecommendations("MANGA", search).then(data =>
+    searchMediaRecommendations("MANGA", search).then(data =>
       this.setState({mangadata: data})
+    );
+    searchStaffRecommendations(search).then(data =>
+      this.setState({staffdata: data})
+    );
+    searchCharacterRecommendations(search).then(data =>
+      this.setState({characterdata: data})
     );
   }
 
@@ -64,28 +76,41 @@ export default class SettingsScreen extends React.Component {
       <SafeAreaView style={{flex: 1}}>
         <View
           style={{
-            width: "85%",
-            left: "5%",
-            height: 30,
-            backgroundColor: "white",
-            marginTop: 10,
-            borderRadius: 15,
-            flexDirection: "row"
+            justifyContent: "center",
+            alignItems: "center",
+            height: 50
           }}
         >
-          <Icon
-            name="md-arrow-back"
-            style={{color: "black", fontSize: 25, marginLeft: 10, marginTop: 2}}
-            onPress={() => NavigationService.navigate("Sandbox")}
-          />
-          <TextInput
-            value={this.state.search}
-            placeholder="Search"
-            onChangeText={value => this.updateSearch(value)}
-            style={styles.searchbar}
-            autoFocus
-            clearButtonMode={"always"}
-          />
+          <View
+            style={{
+              width: "85%",
+              left: "5%",
+              height: 30,
+              backgroundColor: "white",
+
+              borderRadius: 15,
+              flexDirection: "row"
+            }}
+          >
+            <Icon
+              name="md-arrow-back"
+              style={{
+                color: "black",
+                fontSize: 25,
+                marginLeft: 10,
+                marginTop: 2
+              }}
+              onPress={() => NavigationService.navigate("Sandbox")}
+            />
+            <TextInput
+              value={this.state.search}
+              placeholder="Search"
+              onChangeText={value => this.updateSearch(value)}
+              style={styles.searchbar}
+              autoFocus
+              clearButtonMode={"always"}
+            />
+          </View>
         </View>
         <ScrollView>
           <Text
@@ -186,6 +211,98 @@ export default class SettingsScreen extends React.Component {
               ))
             )}
           </View>
+          <Text
+            style={{
+              color: "white",
+              marginLeft: 20,
+              fontSize: 20,
+              marginTop: 10
+            }}
+          >
+            Staff
+          </Text>
+          <View
+            style={{
+              backgroundColor: "white",
+              height: 1,
+              width: "100%",
+              margin: 10
+            }}
+          ></View>
+          <View>
+            {this.state.staffdata == null ? (
+              <Text>''</Text>
+            ) : (
+              this.state.staffdata.data.Page.staff.map(obj => (
+                <TouchableOpacity
+                  key={obj.id}
+                  activeOpacity={0.5}
+                  onPress={() =>
+                    NavigationService.navigate("Details", {
+                      itemId: obj.id,
+                      title: obj.title.romaji,
+                      type: "MANGA"
+                    })
+                  }
+                >
+                  <View style={{flexDirection: "row"}}>
+                    <Image source={{uri: obj.image.large}} style={styles.img} />
+                    <Text
+                      style={{color: "white", marginTop: 15, marginLeft: 15}}
+                    >
+                      {obj.name.last}, {obj.name.first}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              ))
+            )}
+          </View>
+          <Text
+            style={{
+              color: "white",
+              marginLeft: 20,
+              fontSize: 20,
+              marginTop: 10
+            }}
+          >
+            Characters
+          </Text>
+          <View
+            style={{
+              backgroundColor: "white",
+              height: 1,
+              width: "100%",
+              margin: 10
+            }}
+          ></View>
+          <View>
+            {this.state.characterdata == null ? (
+              <Text>''</Text>
+            ) : (
+              this.state.characterdata.data.Page.characters.map(obj => (
+                <TouchableOpacity
+                  key={obj.id}
+                  activeOpacity={0.5}
+                  onPress={() =>
+                    NavigationService.navigate("Details", {
+                      itemId: obj.id,
+                      title: obj.title.romaji,
+                      type: "MANGA"
+                    })
+                  }
+                >
+                  <View style={{flexDirection: "row"}}>
+                    <Image source={{uri: obj.image.large}} style={styles.img} />
+                    <Text
+                      style={{color: "white", marginTop: 15, marginLeft: 15}}
+                    >
+                      {obj.name.last}, {obj.name.first}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              ))
+            )}
+          </View>
         </ScrollView>
       </SafeAreaView>
     );
@@ -203,7 +320,7 @@ var styles = StyleSheet.create({
   },
   img: {
     height: 100,
-    width: 50,
+    width: 70,
     marginLeft: 20,
     marginTop: 15
   }

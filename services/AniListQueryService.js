@@ -108,7 +108,7 @@ export function getEntryinfo(type = "ANIME", sort = "POPULARITY_DESC") {
     .catch(e => console.log(e));
 }
 
-export function searchRecommendations(mediatype = "ANIME", search) {
+export function searchMediaRecommendations(mediatype = "ANIME", search) {
   return AsyncStorage.getItem("@Settings:value").then(value => {
     var query = `
           query ($page: Int, $perPage: Int, $search: String) {
@@ -125,6 +125,110 @@ export function searchRecommendations(mediatype = "ANIME", search) {
             }
           }
           `;
+    console.log(search);
+
+    var variables = {
+      search: search,
+      page: 1,
+      perPage: 5
+    };
+
+    var url = "https://graphql.anilist.co",
+      options = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        },
+        body: JSON.stringify({
+          query: query,
+          variables: variables
+        })
+      };
+
+    return fetch(url, options)
+      .then(response => {
+        return response.json().then(function(json) {
+          return response.ok ? json : Promise.reject(json);
+        });
+      })
+      .then(responseJson => {
+        return responseJson;
+      });
+  });
+}
+
+export function searchStaffRecommendations(search) {
+  return AsyncStorage.getItem("@Settings:value").then(value => {
+    var query = `
+    query ($page: Int, $perPage: Int, $search: String) {
+      Page(page: $page, perPage: $perPage) {
+        staff (search: $search) {
+          name {
+            first
+            last
+            full
+            native
+          }
+          image {
+            large
+          }
+        }
+      }
+    }
+    `;
+    console.log(search);
+
+    var variables = {
+      search: search,
+      page: 1,
+      perPage: 5
+    };
+
+    var url = "https://graphql.anilist.co",
+      options = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        },
+        body: JSON.stringify({
+          query: query,
+          variables: variables
+        })
+      };
+
+    return fetch(url, options)
+      .then(response => {
+        return response.json().then(function(json) {
+          return response.ok ? json : Promise.reject(json);
+        });
+      })
+      .then(responseJson => {
+        return responseJson;
+      });
+  });
+}
+
+export function searchCharacterRecommendations(search) {
+  return AsyncStorage.getItem("@Settings:value").then(value => {
+    var query = `
+    query ($page: Int, $perPage: Int, $search: String) {
+      Page(page: $page, perPage: $perPage) {
+        characters (search: $search) {
+          name {
+            first
+            last
+            full
+            native
+          }
+          image {
+            large
+          }
+        }
+      }
+    }
+    `;
     console.log(search);
 
     var variables = {
