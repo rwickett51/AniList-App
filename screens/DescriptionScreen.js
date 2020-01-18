@@ -19,7 +19,6 @@ import Home from "./HomeScreen.js";
 import NavigationService from "../services/NavigationService.js";
 import {getInfo} from "../services/AniListQueryService.js";
 import HorizontalList from "../components/HorizontalList.js";
-
 export default class DescriptionScreen extends React.Component {
   constructor(props) {
     super(props);

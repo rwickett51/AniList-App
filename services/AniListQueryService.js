@@ -157,3 +157,7 @@ export function searchRecommendations(mediatype = "ANIME", search) {
       });
   });
 }
+
+export function addEntryToList() {
+  AysncStorage.getItem("@AccessToken:key").then(ley => {});
+}

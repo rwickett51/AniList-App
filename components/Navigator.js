@@ -15,6 +15,7 @@ import HomeScreen from "../screens/HomeScreen.js";
 import SettingsScreen from "../screens/SettingsScreen.js";
 import SearchScreen from "../screens/SearchScreen.js";
 import TemplateScreen from "../screens/TemplateScreen.js";
+import LoginScreen from "../screens/LoginScreen.js";
 
 const Settings = createStackNavigator({
   Settings: {
@@ -39,12 +40,18 @@ const Template = createStackNavigator({
     screen: TemplateScreen
   }
 });
+const Login = createStackNavigator({
+  Sandbox: {
+    screen: LoginScreen
+  }
+});
 
 //Drawer Tab
 const DrawerStack = createDrawerNavigator(
   {
     Home: {screen: Navigator},
     Settings: {screen: Settings},
+    Login: {screen: Login},
     Template: {screen: Template}
   },
   {
