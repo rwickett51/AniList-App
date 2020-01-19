@@ -41,7 +41,6 @@ export default class SettingsScreen extends React.Component {
   //Header Options
   static navigationOptions = ({navigation}) => {
     return {
-      title: "Template",
       headerShown: false
     };
   };
@@ -67,6 +66,61 @@ export default class SettingsScreen extends React.Component {
     );
     searchCharacterRecommendations(search).then(data =>
       this.setState({characterdata: data})
+    );
+  }
+
+  generateMediaList(title, data) {
+    //console.log(data);
+    return (
+      <View>
+        <Text
+          style={{
+            color: "white",
+            marginLeft: 20,
+            fontSize: 20,
+            marginTop: 20
+          }}
+        >
+          {title}
+        </Text>
+        <View
+          style={{
+            backgroundColor: "white",
+            height: 1,
+            width: "100%",
+            margin: 10
+          }}
+        ></View>
+        <View>
+          {data == null ? (
+            <Text>''</Text>
+          ) : (
+            data.data.Page.media.map(obj => (
+              <TouchableOpacity
+                key={obj.id}
+                activeOpacity={0.5}
+                onPress={() =>
+                  NavigationService.navigate("Details", {
+                    itemId: obj.id,
+                    title: obj.title.romaji,
+                    type: obj.type
+                  })
+                }
+              >
+                <View style={{flexDirection: "row"}}>
+                  <Image
+                    source={{uri: obj.coverImage.large}}
+                    style={styles.img}
+                  />
+                  <Text style={{color: "white", marginTop: 15, marginLeft: 15}}>
+                    {obj.title.romaji}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            ))
+          )}
+        </View>
+      </View>
     );
   }
 
@@ -100,7 +154,7 @@ export default class SettingsScreen extends React.Component {
                 marginLeft: 10,
                 marginTop: 2
               }}
-              onPress={() => NavigationService.navigate("Sandbox")}
+              onPress={() => NavigationService.navigate("Home")}
             />
             <TextInput
               value={this.state.search}
@@ -113,195 +167,109 @@ export default class SettingsScreen extends React.Component {
           </View>
         </View>
         <ScrollView>
-          <Text
-            style={{
-              color: "white",
-              marginLeft: 20,
-              fontSize: 20,
-              marginTop: 20
-            }}
-          >
-            Anime
-          </Text>
-          <View
-            style={{
-              backgroundColor: "white",
-              height: 1,
-              width: "100%",
-              margin: 10
-            }}
-          ></View>
+          {this.generateMediaList("Anime", this.state.animedata)}
+          {this.generateMediaList("Manga", this.state.mangadata)}
           <View>
-            {this.state.animedata == null ? (
-              <Text>''</Text>
-            ) : (
-              this.state.animedata.data.Page.media.map(obj => (
-                <TouchableOpacity
-                  key={obj.id}
-                  activeOpacity={0.5}
-                  onPress={() =>
-                    NavigationService.navigate("Details", {
-                      itemId: obj.id,
-                      title: obj.title.romaji,
-                      type: "ANIME"
-                    })
-                  }
-                >
-                  <View style={{flexDirection: "row"}}>
-                    <Image
-                      source={{uri: obj.coverImage.large}}
-                      style={styles.img}
-                    />
-                    <Text
-                      style={{color: "white", marginTop: 15, marginLeft: 15}}
-                    >
-                      {obj.title.romaji}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              ))
-            )}
+            <Text
+              style={{
+                color: "white",
+                marginLeft: 20,
+                fontSize: 20,
+                marginTop: 10
+              }}
+            >
+              Staff
+            </Text>
+            <View
+              style={{
+                backgroundColor: "white",
+                height: 1,
+                width: "100%",
+                margin: 10
+              }}
+            ></View>
+            <View>
+              {this.state.staffdata == null ? (
+                <Text>''</Text>
+              ) : (
+                this.state.staffdata.data.Page.staff.map(obj => (
+                  <TouchableOpacity
+                    key={obj.id}
+                    activeOpacity={0.5}
+                    onPress={() =>
+                      NavigationService.navigate("Details", {
+                        itemId: obj.id,
+                        title: obj.title.romaji,
+                        type: "MANGA"
+                      })
+                    }
+                  >
+                    <View style={{flexDirection: "row"}}>
+                      <Image
+                        source={{uri: obj.image.large}}
+                        style={styles.img}
+                      />
+                      <Text
+                        style={{color: "white", marginTop: 15, marginLeft: 15}}
+                      >
+                        {obj.name.last}, {obj.name.first}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                ))
+              )}
+            </View>
           </View>
-          <Text
-            style={{
-              color: "white",
-              marginLeft: 20,
-              fontSize: 20,
-              marginTop: 10
-            }}
-          >
-            Manga
-          </Text>
-          <View
-            style={{
-              backgroundColor: "white",
-              height: 1,
-              width: "100%",
-              margin: 10
-            }}
-          ></View>
           <View>
-            {this.state.mangadata == null ? (
-              <Text>''</Text>
-            ) : (
-              this.state.mangadata.data.Page.media.map(obj => (
-                <TouchableOpacity
-                  key={obj.id}
-                  activeOpacity={0.5}
-                  onPress={() =>
-                    NavigationService.navigate("Details", {
-                      itemId: obj.id,
-                      title: obj.title.romaji,
-                      type: "MANGA"
-                    })
-                  }
-                >
-                  <View style={{flexDirection: "row"}}>
-                    <Image
-                      source={{uri: obj.coverImage.large}}
-                      style={styles.img}
-                    />
-                    <Text
-                      style={{color: "white", marginTop: 15, marginLeft: 15}}
-                    >
-                      {obj.title.romaji}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              ))
-            )}
-          </View>
-          <Text
-            style={{
-              color: "white",
-              marginLeft: 20,
-              fontSize: 20,
-              marginTop: 10
-            }}
-          >
-            Staff
-          </Text>
-          <View
-            style={{
-              backgroundColor: "white",
-              height: 1,
-              width: "100%",
-              margin: 10
-            }}
-          ></View>
-          <View>
-            {this.state.staffdata == null ? (
-              <Text>''</Text>
-            ) : (
-              this.state.staffdata.data.Page.staff.map(obj => (
-                <TouchableOpacity
-                  key={obj.id}
-                  activeOpacity={0.5}
-                  onPress={() =>
-                    NavigationService.navigate("Details", {
-                      itemId: obj.id,
-                      title: obj.title.romaji,
-                      type: "MANGA"
-                    })
-                  }
-                >
-                  <View style={{flexDirection: "row"}}>
-                    <Image source={{uri: obj.image.large}} style={styles.img} />
-                    <Text
-                      style={{color: "white", marginTop: 15, marginLeft: 15}}
-                    >
-                      {obj.name.last}, {obj.name.first}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              ))
-            )}
-          </View>
-          <Text
-            style={{
-              color: "white",
-              marginLeft: 20,
-              fontSize: 20,
-              marginTop: 10
-            }}
-          >
-            Characters
-          </Text>
-          <View
-            style={{
-              backgroundColor: "white",
-              height: 1,
-              width: "100%",
-              margin: 10
-            }}
-          ></View>
-          <View>
-            {this.state.characterdata == null ? (
-              <Text>''</Text>
-            ) : (
-              this.state.characterdata.data.Page.characters.map(obj => (
-                <TouchableOpacity
-                  key={obj.id}
-                  activeOpacity={0.5}
-                  onPress={() =>
-                    NavigationService.navigate("Details", {
-                      itemId: obj.id,
-                      title: obj.title.romaji,
-                      type: "MANGA"
-                    })
-                  }
-                >
-                  <View style={{flexDirection: "row"}}>
-                    <Image source={{uri: obj.image.large}} style={styles.img} />
-                    <Text
-                      style={{color: "white", marginTop: 15, marginLeft: 15}}
-                    >
-                      {obj.name.last}, {obj.name.first}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              ))
-            )}
+            <Text
+              style={{
+                color: "white",
+                marginLeft: 20,
+                fontSize: 20,
+                marginTop: 10
+              }}
+            >
+              Characters
+            </Text>
+            <View
+              style={{
+                backgroundColor: "white",
+                height: 1,
+                width: "100%",
+                margin: 10
+              }}
+            ></View>
+            <View>
+              {this.state.characterdata == null ? (
+                <Text>''</Text>
+              ) : (
+                this.state.characterdata.data.Page.characters.map(obj => (
+                  <TouchableOpacity
+                    key={obj.id}
+                    activeOpacity={0.5}
+                    onPress={() =>
+                      NavigationService.navigate("Details", {
+                        itemId: obj.id,
+                        title: obj.title.romaji,
+                        type: "MANGA"
+                      })
+                    }
+                  >
+                    <View style={{flexDirection: "row"}}>
+                      <Image
+                        source={{uri: obj.image.large}}
+                        style={styles.img}
+                      />
+                      <Text
+                        style={{color: "white", marginTop: 15, marginLeft: 15}}
+                      >
+                        {obj.name.last}, {obj.name.first}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                ))
+              )}
+            </View>
           </View>
         </ScrollView>
       </SafeAreaView>

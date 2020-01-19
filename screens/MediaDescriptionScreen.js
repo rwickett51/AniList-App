@@ -17,7 +17,7 @@ import {createStackNavigator} from "react-navigation-stack";
 import {LinearGradient} from "expo-linear-gradient";
 import Home from "./HomeScreen.js";
 import NavigationService from "../services/NavigationService.js";
-import {getInfo} from "../services/AniListQueryService.js";
+import {getInfo, addEntryToList} from "../services/AniListQueryService.js";
 import HorizontalList from "../components/HorizontalList.js";
 export default class DescriptionScreen extends React.Component {
   constructor(props) {
@@ -85,6 +85,30 @@ export default class DescriptionScreen extends React.Component {
           <Image
             source={{uri: data.coverImage.large}}
             style={styles.coverImg}
+          />
+          <Button
+            title="Add Title to Watching/Reading"
+            onPress={() => addEntryToList(data.id, "CURRENT")}
+          />
+          <Button
+            title="Add Title to Planning"
+            onPress={() => addEntryToList(data.id, "PLANNING")}
+          />
+          <Button
+            title="Add Title to Completed"
+            onPress={() => addEntryToList(data.id, "COMPLETED")}
+          />
+          <Button
+            title="Add Title to Dropped"
+            onPress={() => addEntryToList(data.id, "DROPPED")}
+          />
+          <Button
+            title="Add Title to Paused"
+            onPress={() => addEntryToList(data.id, "PAUSED")}
+          />
+          <Button
+            title="Add Title to Repeating"
+            onPress={() => addEntryToList(data.id, "REPEATING")}
           />
           <Text style={styles.title}>{data.title.romaji}</Text>
           <View>

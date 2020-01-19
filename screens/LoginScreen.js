@@ -46,10 +46,10 @@ export default class SettingsScreen extends React.Component {
         "https://anilist.co/api/v2/oauth/anilist.co#",
         ""
       );
-      var hash;
-      var myJson = {};
-      var hashes = url.slice(url.indexOf("?") + 1).split("&");
-      for (var i = 0; i < hashes.length; i++) {
+      let hash;
+      let myJson = {};
+      let hashes = url.slice(url.indexOf("?") + 1).split("&");
+      for (let i = 0; i < hashes.length; i++) {
         hash = hashes[i].split("=");
         myJson[hash[0]] = hash[1];
       }

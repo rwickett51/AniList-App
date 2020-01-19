@@ -1,10 +1,11 @@
 import React from "react";
-import {AsyncStorage} from "react-native";
+import {AsyncStorage, Alert} from "react-native";
 
 export function getInfo(id = 1, type = "ANIME") {
   var query = `
   query ($id: Int) {
     Media (id: $id, type: ${type}) {
+      id
       bannerImage
       coverImage {
         large
@@ -61,7 +62,6 @@ export function getInfo(id = 1, type = "ANIME") {
       });
     })
     .then(responseJson => {
-      console.log(responseJson);
       return responseJson;
     })
     .catch(e => console.log(e));
@@ -108,13 +108,14 @@ export function getEntryinfo(type = "ANIME", sort = "POPULARITY_DESC") {
     .catch(e => console.log(e));
 }
 
-export function searchMediaRecommendations(mediatype = "ANIME", search) {
+export function searchMediaRecommendations(mediatype, search) {
   return AsyncStorage.getItem("@Settings:value").then(value => {
     var query = `
           query ($page: Int, $perPage: Int, $search: String) {
             Page (page: $page, perPage: $perPage) {
               media (search: $search, type: ${mediatype}, isAdult: ${value}) {
                 id
+                type
                 coverImage {
                   large
                 }
@@ -125,7 +126,6 @@ export function searchMediaRecommendations(mediatype = "ANIME", search) {
             }
           }
           `;
-    console.log(search);
 
     var variables = {
       search: search,
@@ -146,15 +146,11 @@ export function searchMediaRecommendations(mediatype = "ANIME", search) {
         })
       };
 
-    return fetch(url, options)
-      .then(response => {
-        return response.json().then(function(json) {
-          return response.ok ? json : Promise.reject(json);
-        });
-      })
-      .then(responseJson => {
-        return responseJson;
+    return fetch(url, options).then(response => {
+      return response.json().then(function(json) {
+        return response.ok ? json : Promise.reject(json);
       });
+    });
   });
 }
 
@@ -198,15 +194,11 @@ export function searchStaffRecommendations(search) {
         })
       };
 
-    return fetch(url, options)
-      .then(response => {
-        return response.json().then(function(json) {
-          return response.ok ? json : Promise.reject(json);
-        });
-      })
-      .then(responseJson => {
-        return responseJson;
+    return fetch(url, options).then(response => {
+      return response.json().then(function(json) {
+        return response.ok ? json : Promise.reject(json);
       });
+    });
   });
 }
 
@@ -250,33 +242,26 @@ export function searchCharacterRecommendations(search) {
         })
       };
 
-    return fetch(url, options)
-      .then(response => {
-        return response.json().then(function(json) {
-          return response.ok ? json : Promise.reject(json);
-        });
-      })
-      .then(responseJson => {
-        return responseJson;
+    return fetch(url, options).then(response => {
+      return response.json().then(function(json) {
+        return response.ok ? json : Promise.reject(json);
       });
+    });
   });
 }
 
-export function addEntryToList(medidId, status) {
+export function addEntryToList(mediaId, status) {
   AsyncStorage.getItem("@AccessToken:key").then(accessToken => {
     let query = `
-      mutation ($mediaId: Int, $status: MediaListStatus) {
-        SaveMediaListEntry (mediaId: $mediaId, status: $status) {
+      mutation {
+        SaveMediaListEntry (mediaId: 11757, status: ${status}) {
           id
           status
         }
       }
     `;
 
-    let variables = {
-      mediaId: 1,
-      status: "CURRENT"
-    };
+    console.log(mediaId, status);
 
     let url = "https://graphql.anilist.co",
       options = {
@@ -287,14 +272,16 @@ export function addEntryToList(medidId, status) {
           Accept: "application/json"
         },
         body: JSON.stringify({
-          query: query,
-          variables: variables
+          query: query
         })
       };
     fetch(url, options)
       .then(response => {
-        console.log(response);
+        return response.json().then(function(json) {
+          return response.ok ? json : Promise.reject(json);
+        });
       })
-      .catch(error => console.log("error"));
+      .then(responseJson => console.log(`${status}, ${responseJson}`))
+      .catch(error => console.log(error.message));
   });
 }

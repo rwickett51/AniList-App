@@ -10,11 +10,10 @@ import {createDrawerNavigator} from "react-navigation-drawer";
 import NavigationService from "../services/NavigationService.js";
 
 //Screens
-import DescriptionScreen from "../screens/DescriptionScreen.js";
+import MediaDescriptionScreen from "../screens/MediaDescriptionScreen.js";
 import HomeScreen from "../screens/HomeScreen.js";
 import SettingsScreen from "../screens/SettingsScreen.js";
 import SearchScreen from "../screens/SearchScreen.js";
-import TemplateScreen from "../screens/TemplateScreen.js";
 import LoginScreen from "../screens/LoginScreen.js";
 
 const Settings = createStackNavigator({
@@ -24,24 +23,18 @@ const Settings = createStackNavigator({
 });
 
 const Navigator = createStackNavigator({
-  Sandbox: {
+  Home: {
     screen: HomeScreen
   },
   Details: {
-    screen: DescriptionScreen
+    screen: MediaDescriptionScreen
   },
   Search: {
     screen: SearchScreen
   }
 });
-
-const Template = createStackNavigator({
-  Sandbox: {
-    screen: TemplateScreen
-  }
-});
 const Login = createStackNavigator({
-  Sandbox: {
+  Login: {
     screen: LoginScreen
   }
 });
