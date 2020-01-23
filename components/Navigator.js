@@ -1,7 +1,6 @@
 import React, {Component} from "react";
 
 //Dependencies
-import {View, Text} from "react-native";
 import {createAppContainer} from "react-navigation";
 import {createStackNavigator} from "react-navigation-stack";
 import {createDrawerNavigator} from "react-navigation-drawer";
@@ -15,6 +14,7 @@ import HomeScreen from "../screens/HomeScreen.js";
 import SettingsScreen from "../screens/SettingsScreen.js";
 import SearchScreen from "../screens/SearchScreen.js";
 import LoginScreen from "../screens/LoginScreen.js";
+import EditEntryScreen from "../screens/EditEntryScreen.js";
 
 const Settings = createStackNavigator({
   Settings: {
@@ -31,6 +31,9 @@ const Navigator = createStackNavigator({
   },
   Search: {
     screen: SearchScreen
+  },
+  EditEntry: {
+    screen: EditEntryScreen
   }
 });
 const Login = createStackNavigator({

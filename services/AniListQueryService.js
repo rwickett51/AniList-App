@@ -9,6 +9,7 @@ export function getInfo(id = 1, type = "ANIME") {
       bannerImage
       coverImage {
         large
+        extraLarge
       }
       title {
         romaji
@@ -250,11 +251,11 @@ export function searchCharacterRecommendations(search) {
   });
 }
 
-export function addEntryToList(mediaId, status) {
+export function addEntryToList(mediaId, status, score, progress) {
   AsyncStorage.getItem("@AccessToken:key").then(accessToken => {
     let query = `
       mutation {
-        SaveMediaListEntry (mediaId: 11757, status: ${status}) {
+        SaveMediaListEntry (mediaId: ${mediaId}, status: ${status}, score: ${score}, progress: ${progress}) {
           id
           status
         }
@@ -283,5 +284,79 @@ export function addEntryToList(mediaId, status) {
       })
       .then(responseJson => console.log(`${status}, ${responseJson}`))
       .catch(error => console.log(error.message));
+  });
+}
+
+export function getUserMediaList() {
+  let query = `
+    query($id: Int){
+      MediaListCollection(userId: $id, type: ANIME) {
+        lists {
+          name
+          isSplitCompletedList
+          status
+          entries {
+            mediaId
+            media {
+              title {
+                romaji
+              }
+            }
+          }
+        }
+      }
+    }
+    `;
+}
+
+export function getUserEntryData(mediaId) {
+  return AsyncStorage.getItem("@AccessToken:key").then(accessToken => {
+    let query = `
+      query {
+        MediaList(userId: 341284, mediaId_in: ${mediaId}) {
+          status
+          score
+          progress
+          progressVolumes
+          repeat
+          private
+          startedAt {
+            year
+            month
+            day
+          }
+          completedAt {
+            year
+            month
+            day
+          }
+          mediaId
+          media {
+            id
+            title {
+              romaji
+            }
+          }
+        }
+      }
+    `;
+
+    let url = "https://graphql.anilist.co",
+      options = {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + accessToken,
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        },
+        body: JSON.stringify({
+          query: query
+        })
+      };
+    return fetch(url, options).then(response => {
+      return response.json().then(function(json) {
+        return response.ok ? json : Promise.reject(json);
+      });
+    });
   });
 }

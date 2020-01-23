@@ -10,7 +10,9 @@ import {
   ScrollView,
   Alert,
   AsyncStorage,
-  TouchableOpacity
+  TouchableOpacity,
+  Picker,
+  ImageBackground
 } from "react-native";
 import {createAppContainer} from "react-navigation";
 import {createStackNavigator} from "react-navigation-stack";
@@ -24,7 +26,8 @@ export default class DescriptionScreen extends React.Component {
     super(props);
     this.state = {
       isLoading: true,
-      data: null
+      data: null,
+      selectedValue: ""
     };
   }
 
@@ -58,7 +61,9 @@ export default class DescriptionScreen extends React.Component {
     getInfo(
       this.props.navigation.state.params.itemId,
       this.props.navigation.state.params.type
-    ).then(data => this.setState({data: data, isLoading: false}));
+    ).then(data => {
+      this.setState({data: data, isLoading: false});
+    });
   }
 
   render() {
@@ -71,85 +76,83 @@ export default class DescriptionScreen extends React.Component {
     } else {
       let data = this.state.data.data.Media;
       return (
-        <ScrollView style={{flex: 1}}>
-          <View>
-            {data.bannerImage == null ? (
-              <View style={styles.bannerimg}></View>
-            ) : (
-              <Image
-                source={{uri: data.bannerImage}}
-                style={styles.bannerimg}
-              />
-            )}
-          </View>
-          <Image
-            source={{uri: data.coverImage.large}}
-            style={styles.coverImg}
-          />
-          <Button
-            title="Add Title to Watching/Reading"
-            onPress={() => addEntryToList(data.id, "CURRENT")}
-          />
-          <Button
-            title="Add Title to Planning"
-            onPress={() => addEntryToList(data.id, "PLANNING")}
-          />
-          <Button
-            title="Add Title to Completed"
-            onPress={() => addEntryToList(data.id, "COMPLETED")}
-          />
-          <Button
-            title="Add Title to Dropped"
-            onPress={() => addEntryToList(data.id, "DROPPED")}
-          />
-          <Button
-            title="Add Title to Paused"
-            onPress={() => addEntryToList(data.id, "PAUSED")}
-          />
-          <Button
-            title="Add Title to Repeating"
-            onPress={() => addEntryToList(data.id, "REPEATING")}
-          />
-          <Text style={styles.title}>{data.title.romaji}</Text>
-          <View>
-            <Text style={{color: "white"}}>Rating {data.averageScore}/100</Text>
-            <View style={{flexDirection: "row"}}>
-              <Text style={{color: "white"}}>Genres: </Text>
-              {data.genres.map(obj => {
-                return <Text style={{color: "white"}}>{obj}, </Text>;
-              })}
+        <ImageBackground
+          source={{uri: data.coverImage.extraLarge}}
+          style={{
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0,
+            flex: 1
+          }}
+          blurRadius={15}
+        >
+          <ScrollView style={{flex: 1, backgroundColor: "rgba(0,0,0, 0.25)"}}>
+            <View>
+              {data.bannerImage == null ? (
+                <View style={styles.bannerimg}></View>
+              ) : (
+                <Image
+                  source={{uri: data.bannerImage}}
+                  style={styles.bannerimg}
+                />
+              )}
+            </View>
+            <Image
+              source={{uri: data.coverImage.large}}
+              style={styles.coverImg}
+            />
+            <Text style={styles.title}>{data.title.romaji}</Text>
+            <Button
+              title="Edit Title"
+              onPress={() =>
+                NavigationService.navigate("EditEntry", {mediaId: data.id})
+              }
+            />
+            <View>
+              <Text style={{color: "white"}}>
+                Rating: {data.averageScore}/100
+              </Text>
+              <View style={{flexDirection: "row"}}>
+                <Text style={{color: "white"}}>Genres: </Text>
+                {data.genres.map(obj => {
+                  return <Text style={{color: "white"}}>{obj}, </Text>;
+                })}
+              </View>
+
+              {this.props.navigation.state.params.type == "ANIME" ? (
+                <Text style={{color: "white"}}>Episodes: {data.episodes}</Text>
+              ) : (
+                <View>
+                  <Text style={{color: "white"}}>Volumes: {data.volumes}</Text>
+                  <Text style={{color: "white"}}>
+                    Chapters: {data.chapters}
+                  </Text>
+                </View>
+              )}
             </View>
 
-            {this.props.navigation.state.params.type == "ANIME" ? (
-              <Text style={{color: "white"}}>Episodes: {data.episodes}</Text>
-            ) : (
-              <View>
-                <Text style={{color: "white"}}>Volumes: {data.volumes}</Text>
-                <Text style={{color: "white"}}>Chapters: {data.chapters}</Text>
-              </View>
-            )}
-          </View>
+            <View style={styles.description}>
+              <Text style={{color: "white"}}>
+                {data.description == null
+                  ? ""
+                  : data.description.replace(/<[^>]*>?/gm, "")}
+              </Text>
+            </View>
 
-          <View style={styles.description}>
-            <Text style={{color: "white"}}>
-              {data.description == null
-                ? ""
-                : data.description.replace(/<[^>]*>?/gm, "")}
+            <Text
+              style={{
+                marginLeft: 10,
+                marginTop: 30,
+                color: "white",
+                fontSize: 15
+              }}
+            >
+              Related
             </Text>
-          </View>
-
-          <Text
-            style={{
-              marginLeft: 10,
-              marginTop: 30,
-              color: "white",
-              fontSize: 15
-            }}
-          >
-            Related
-          </Text>
-          <HorizontalList data={data} />
-        </ScrollView>
+            <HorizontalList data={data} />
+          </ScrollView>
+        </ImageBackground>
       );
     }
   }
