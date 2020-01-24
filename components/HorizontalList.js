@@ -9,6 +9,7 @@ import {
   TouchableOpacity
 } from "react-native";
 import NavigationService from "../services/NavigationService.js";
+import ImageLoader from "../components/ImageLoader.js";
 
 export default class HorizontalList extends React.Component {
   render() {
@@ -40,7 +41,7 @@ export default class HorizontalList extends React.Component {
                     )
                   }
                 >
-                  <Image
+                  <ImageLoader
                     style={styles.recommendationImg}
                     source={{uri: obj.node.coverImage.large}}
                   />

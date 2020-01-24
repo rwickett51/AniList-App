@@ -21,6 +21,7 @@ import Home from "./HomeScreen.js";
 import NavigationService from "../services/NavigationService.js";
 import {getInfo, addEntryToList} from "../services/AniListQueryService.js";
 import HorizontalList from "../components/HorizontalList.js";
+import ImageLoader from "../components/ImageLoader.js";
 export default class DescriptionScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -58,10 +59,12 @@ export default class DescriptionScreen extends React.Component {
   };
 
   componentDidMount() {
+    console.log(this.props.navigation.state.params.itemId);
     getInfo(
       this.props.navigation.state.params.itemId,
       this.props.navigation.state.params.type
     ).then(data => {
+      console.log(data);
       this.setState({data: data, isLoading: false});
     });
   }
@@ -88,17 +91,7 @@ export default class DescriptionScreen extends React.Component {
           blurRadius={15}
         >
           <ScrollView style={{flex: 1, backgroundColor: "rgba(0,0,0, 0.25)"}}>
-            <View>
-              {data.bannerImage == null ? (
-                <View style={styles.bannerimg}></View>
-              ) : (
-                <Image
-                  source={{uri: data.bannerImage}}
-                  style={styles.bannerimg}
-                />
-              )}
-            </View>
-            <Image
+            <ImageLoader
               source={{uri: data.coverImage.large}}
               style={styles.coverImg}
             />
@@ -160,11 +153,11 @@ export default class DescriptionScreen extends React.Component {
 
 const styles = StyleSheet.create({
   coverImg: {
-    height: 200,
-    width: 140,
+    height: 250,
+    width: 170,
     resizeMode: "cover",
     alignSelf: "center",
-    marginTop: 170,
+    marginTop: 90,
     borderWidth: 5
   },
   bannerimg: {

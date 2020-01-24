@@ -9,7 +9,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
-  TextInput
+  TextInput,
+  ImageBackground
 } from "react-native";
 import {Dropdown} from "react-native-material-dropdown";
 import {
@@ -66,150 +67,168 @@ export default class SettingsScreen extends React.Component {
       return <ActivityIndicator />;
     } else
       return (
-        <ScrollView style={{flex: 1}}>
-          <View style={{marginRight: 15, marginLeft: 15}}>
-            <Dropdown
-              label="Status"
-              textColor="white"
-              baseColor="white"
-              selectedItemColor="black"
-              disabledItemColor="grey"
-              dropdownPosition={0}
-              onChangeText={value => this.setState({status: value})}
-              data={[
-                {
-                  label: "Current",
-                  value: "CURRENT"
-                },
-                {
-                  label: "Planning",
-                  value: "PLANNING"
-                },
-                {
-                  label: "Completed",
-                  value: "COMPLETED"
-                },
-                {
-                  label: "Dropped",
-                  value: "DROPPED"
-                },
-                {
-                  label: "Paused",
-                  value: "PAUSED"
-                },
-                {
-                  label: "Repeating",
-                  value: "REPEATING"
-                }
-              ]}
-              value={this.state.status}
-            />
-            <View
-              style={{flexDirection: "row", justifyContent: "space-between"}}
-            >
+        <ImageBackground
+          source={{
+            uri: this.state.data.data.MediaList.media.coverImage.extraLarge
+          }}
+          style={{
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0,
+            flex: 1
+          }}
+          blurRadius={15}
+        >
+          <ScrollView style={{flex: 1, backgroundColor: "rgba(0,0,0, 0.25)"}}>
+            <View style={{marginRight: 15, marginLeft: 15}}>
               <Dropdown
-                label="Score"
+                label="Status"
                 textColor="white"
                 baseColor="white"
                 selectedItemColor="black"
                 disabledItemColor="grey"
                 dropdownPosition={0}
-                onChangeText={value => this.setState({score: value})}
+                onChangeText={value => this.setState({status: value})}
                 data={[
                   {
-                    value: 1
+                    label: "Current",
+                    value: "CURRENT"
                   },
                   {
-                    value: 2
+                    label: "Planning",
+                    value: "PLANNING"
                   },
                   {
-                    value: 3
+                    label: "Completed",
+                    value: "COMPLETED"
                   },
                   {
-                    value: 4
+                    label: "Dropped",
+                    value: "DROPPED"
                   },
                   {
-                    value: 5
+                    label: "Paused",
+                    value: "PAUSED"
                   },
                   {
-                    value: 6
-                  },
-                  {
-                    value: 7
-                  },
-                  {
-                    value: 8
-                  },
-                  {
-                    value: 9
-                  },
-                  {
-                    value: 10
+                    label: "Repeating",
+                    value: "REPEATING"
                   }
                 ]}
-                value={this.state.data.data.MediaList.score}
-                containerStyle={{width: "45%"}}
+                value={this.state.status}
               />
-              <TextField
-                label="Progress"
-                keyboardType="decimal-pad"
-                textColor="white"
-                baseColor="white"
-                onChangeText={value => {
-                  this.setState({progress: value});
-                  console.log(value);
-                }}
-                value={this.state.progress}
-                ref={component => (this.progressinput = component)}
-                containerStyle={{width: "45%"}}
-              />
-            </View>
-          </View>
-          <View style={{flexDirection: "row", justifyContent: "space-between"}}>
-            <View
-              style={{
-                justifyContent: "center",
-                alignItems: "center",
-                backgroundColor: "red",
-                width: 70,
-                height: 40,
-                borderRadius: 10,
-                marginLeft: 15
-              }}
-            >
-              <TouchableOpacity style={{right: 0, bottom: 0}}>
-                <Text style={{color: "white", alignSelf: "center"}}>
-                  Delete
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <View
-              style={{
-                justifyContent: "center",
-                alignItems: "center",
-                backgroundColor: "blue",
-                width: 70,
-                height: 40,
-                borderRadius: 10,
-                marginRight: 15
-              }}
-            >
-              <TouchableOpacity
-                style={{right: 0, bottom: 0}}
-                onPress={() =>
-                  addEntryToList(
-                    this.props.navigation.state.params.mediaId,
-                    this.state.status,
-                    this.state.score,
-                    parseInt(this.state.progress, 10)
-                  )
-                }
+              <View
+                style={{flexDirection: "row", justifyContent: "space-between"}}
               >
-                <Text style={{color: "white", alignSelf: "center"}}>Save</Text>
-              </TouchableOpacity>
+                <Dropdown
+                  label="Score"
+                  textColor="white"
+                  baseColor="white"
+                  selectedItemColor="black"
+                  disabledItemColor="grey"
+                  dropdownPosition={0}
+                  onChangeText={value => this.setState({score: value})}
+                  data={[
+                    {
+                      value: 1
+                    },
+                    {
+                      value: 2
+                    },
+                    {
+                      value: 3
+                    },
+                    {
+                      value: 4
+                    },
+                    {
+                      value: 5
+                    },
+                    {
+                      value: 6
+                    },
+                    {
+                      value: 7
+                    },
+                    {
+                      value: 8
+                    },
+                    {
+                      value: 9
+                    },
+                    {
+                      value: 10
+                    }
+                  ]}
+                  value={this.state.data.data.MediaList.score}
+                  containerStyle={{width: "45%"}}
+                />
+                <TextField
+                  label="Progress"
+                  keyboardType="decimal-pad"
+                  textColor="white"
+                  baseColor="white"
+                  onChangeText={value => {
+                    this.setState({progress: value});
+                    console.log(value);
+                  }}
+                  value={this.state.progress}
+                  ref={component => (this.progressinput = component)}
+                  containerStyle={{width: "45%"}}
+                />
+              </View>
             </View>
-          </View>
-        </ScrollView>
+            <View
+              style={{flexDirection: "row", justifyContent: "space-between"}}
+            >
+              <View
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                  backgroundColor: "red",
+                  width: 70,
+                  height: 40,
+                  borderRadius: 10,
+                  marginLeft: 15
+                }}
+              >
+                <TouchableOpacity style={{right: 0, bottom: 0}}>
+                  <Text style={{color: "white", alignSelf: "center"}}>
+                    Delete
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <View
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                  backgroundColor: "blue",
+                  width: 70,
+                  height: 40,
+                  borderRadius: 10,
+                  marginRight: 15
+                }}
+              >
+                <TouchableOpacity
+                  style={{right: 0, bottom: 0}}
+                  onPress={() =>
+                    addEntryToList(
+                      this.props.navigation.state.params.mediaId,
+                      this.state.status,
+                      this.state.score,
+                      parseInt(this.state.progress, 10)
+                    )
+                  }
+                >
+                  <Text style={{color: "white", alignSelf: "center"}}>
+                    Save
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </ScrollView>
+        </ImageBackground>
       );
   }
 }

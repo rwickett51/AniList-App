@@ -287,26 +287,50 @@ export function addEntryToList(mediaId, status, score, progress) {
   });
 }
 
-export function getUserMediaList() {
-  let query = `
-    query($id: Int){
-      MediaListCollection(userId: $id, type: ANIME) {
-        lists {
-          name
-          isSplitCompletedList
-          status
-          entries {
-            mediaId
-            media {
-              title {
-                romaji
+export function getUserMediaList(type) {
+  return AsyncStorage.getItem("@AccessToken:key").then(accessToken => {
+    let query = `
+      {
+        MediaListCollection(userId: 341284, type: ${type}) {
+          lists {
+            name
+            isSplitCompletedList
+            status
+            entries {
+              mediaId
+              media {
+                coverImage {
+                  large
+                }
+                title {
+                  romaji
+                }
+                type
               }
             }
           }
         }
       }
-    }
-    `;
+      `;
+
+    let url = "https://graphql.anilist.co",
+      options = {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + accessToken,
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        },
+        body: JSON.stringify({
+          query: query
+        })
+      };
+    return fetch(url, options).then(response => {
+      return response.json().then(function(json) {
+        return response.ok ? json : Promise.reject(json);
+      });
+    });
+  });
 }
 
 export function getUserEntryData(mediaId) {
@@ -333,6 +357,9 @@ export function getUserEntryData(mediaId) {
           mediaId
           media {
             id
+            coverImage {
+              extraLarge
+            }
             title {
               romaji
             }

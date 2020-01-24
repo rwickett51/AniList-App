@@ -11,11 +11,13 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
-  AsyncStorage
+  AsyncStorage,
+  ImageBackground
 } from "react-native";
 import {LinearGradient} from "expo-linear-gradient";
 import Icon from "react-native-vector-icons/Ionicons";
 import {getEntryinfo} from "../services/AniListQueryService.js";
+import ImageLoader from "../components/ImageLoader.js";
 
 //Import Services
 import NavigationService from "../services/NavigationService.js";
@@ -93,7 +95,7 @@ export default class SettingsScreen extends React.Component {
               }
             >
               <View style={styles.box}>
-                <Image
+                <ImageLoader
                   source={{uri: obj.coverImage.large}}
                   style={styles.img}
                 />
@@ -126,32 +128,44 @@ export default class SettingsScreen extends React.Component {
       );
     } else {
       return (
-        <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
-          <Text style={styles.headerText}>Trending Anime</Text>
-          {this.state.topanimedata == null ? (
-            <ActivityIndicator />
-          ) : (
-            this.horizontalList(this.state.topanimedata.data.Page.media)
-          )}
-          <Text style={styles.headerText}>Most Popular Anime</Text>
-          {this.state.trendinganimedata == null ? (
-            <ActivityIndicator />
-          ) : (
-            this.horizontalList(this.state.trendinganimedata.data.Page.media)
-          )}
-          <Text style={styles.headerText}>Trending Manga</Text>
-          {this.state.topmangadata == null ? (
-            <ActivityIndicator />
-          ) : (
-            this.horizontalList(this.state.topmangadata.data.Page.media)
-          )}
-          <Text style={styles.headerText}>Most Popular Manga</Text>
-          {this.state.trendingmangadata == null ? (
-            <ActivityIndicator />
-          ) : (
-            this.horizontalList(this.state.trendingmangadata.data.Page.media)
-          )}
-        </ScrollView>
+        <ImageBackground
+          source={require("../assets/MediaListBackground.jpg")}
+          style={{
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0,
+            flex: 1
+          }}
+          blurRadius={15}
+        >
+          <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
+            <Text style={styles.headerText}>Trending Anime</Text>
+            {this.state.topanimedata == null ? (
+              <ActivityIndicator />
+            ) : (
+              this.horizontalList(this.state.topanimedata.data.Page.media)
+            )}
+            <Text style={styles.headerText}>Most Popular Anime</Text>
+            {this.state.trendinganimedata == null ? (
+              <ActivityIndicator />
+            ) : (
+              this.horizontalList(this.state.trendinganimedata.data.Page.media)
+            )}
+            <Text style={styles.headerText}>Trending Manga</Text>
+            {this.state.topmangadata == null ? (
+              <ActivityIndicator />
+            ) : (
+              this.horizontalList(this.state.topmangadata.data.Page.media)
+            )}
+            <Text style={styles.headerText}>Most Popular Manga</Text>
+            {this.state.trendingmangadata == null ? (
+              <ActivityIndicator />
+            ) : (
+              this.horizontalList(this.state.trendingmangadata.data.Page.media)
+            )}
+          </ScrollView>
+        </ImageBackground>
       );
     }
   }
