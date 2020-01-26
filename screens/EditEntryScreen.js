@@ -19,10 +19,13 @@ import {
   OutlinedTextField
 } from "react-native-material-textfield";
 import Icon from "react-native-vector-icons/Ionicons";
+import {TextButton, RaisedTextButton} from "react-native-material-buttons";
+import ModalMessage from "../components/ModalMessage.js";
 
 import {
   getUserEntryData,
-  addEntryToList
+  addEntryToList,
+  deleteEntryFromList
 } from "../services/AniListQueryService.js";
 
 export default class SettingsScreen extends React.Component {
@@ -32,7 +35,7 @@ export default class SettingsScreen extends React.Component {
     this.state = {
       status: "",
       score: 0,
-      progress: "",
+      progress: "0",
       data: null,
       isLoading: true
     };
@@ -44,13 +47,16 @@ export default class SettingsScreen extends React.Component {
       this.props.navigation.state.params.mediaId,
       this.state.status
     ).then(data => {
-      this.setState({
-        data: data,
-        isLoading: false,
-        status: data.data.MediaList.status,
-        score: data.data.MediaList.score,
-        progress: data.data.MediaList.progress.toString()
-      });
+      console.log(data);
+      if (data.data.MediaList != null)
+        this.setState({
+          data: data,
+          isLoading: false,
+          status: data.data.MediaList.status,
+          score: data.data.MediaList.score,
+          progress: data.data.MediaList.progress.toString()
+        });
+      else this.setState({isLoading: false});
     });
   }
 
@@ -69,7 +75,7 @@ export default class SettingsScreen extends React.Component {
       return (
         <ImageBackground
           source={{
-            uri: this.state.data.data.MediaList.media.coverImage.extraLarge
+            uri: this.props.navigation.state.params.image
           }}
           style={{
             left: 0,
@@ -161,7 +167,11 @@ export default class SettingsScreen extends React.Component {
                       value: 10
                     }
                   ]}
-                  value={this.state.data.data.MediaList.score}
+                  value={
+                    this.state.data == null
+                      ? 0
+                      : this.state.data.data.MediaList.score
+                  }
                   containerStyle={{width: "45%"}}
                 />
                 <TextField
@@ -193,7 +203,15 @@ export default class SettingsScreen extends React.Component {
                   marginLeft: 15
                 }}
               >
-                <TouchableOpacity style={{right: 0, bottom: 0}}>
+                <TouchableOpacity
+                  disabled={this.state.data == null}
+                  style={{right: 0, bottom: 0}}
+                  onPress={() =>
+                    deleteEntryFromList(
+                      this.state.data.data.MediaList.id
+                    ).then(data => console.log(data))
+                  }
+                >
                   <Text style={{color: "white", alignSelf: "center"}}>
                     Delete
                   </Text>

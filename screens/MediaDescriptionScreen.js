@@ -20,8 +20,10 @@ import {LinearGradient} from "expo-linear-gradient";
 import Home from "./HomeScreen.js";
 import NavigationService from "../services/NavigationService.js";
 import {getInfo, addEntryToList} from "../services/AniListQueryService.js";
-import HorizontalList from "../components/HorizontalList.js";
+import RelatedHorizontalList from "../components/RelatedHorizontalList.js";
+import RecommendationHorizontalList from "../components/RecommendationHorizontalList.js";
 import ImageLoader from "../components/ImageLoader.js";
+import {TextButton, RaisedTextButton} from "react-native-material-buttons";
 export default class DescriptionScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -96,11 +98,20 @@ export default class DescriptionScreen extends React.Component {
               style={styles.coverImg}
             />
             <Text style={styles.title}>{data.title.romaji}</Text>
-            <Button
+            <RaisedTextButton
               title="Edit Title"
               onPress={() =>
-                NavigationService.navigate("EditEntry", {mediaId: data.id})
+                NavigationService.navigate("EditEntry", {
+                  mediaId: data.id,
+                  image: data.coverImage.extraLarge
+                })
               }
+              style={{
+                width: "75%",
+                alignSelf: "center",
+                backgroundColor: "#5280e9",
+                marginBottom: 15
+              }}
             />
             <View>
               <Text style={{color: "white"}}>
@@ -133,17 +144,36 @@ export default class DescriptionScreen extends React.Component {
               </Text>
             </View>
 
-            <Text
-              style={{
-                marginLeft: 10,
-                marginTop: 30,
-                color: "white",
-                fontSize: 15
-              }}
-            >
-              Related
-            </Text>
-            <HorizontalList data={data} />
+            {data.relations.edges.length == 0 ? (
+              <View></View>
+            ) : (
+              <Text
+                style={{
+                  marginLeft: 10,
+                  marginTop: 30,
+                  color: "white",
+                  fontSize: 15
+                }}
+              >
+                Related
+              </Text>
+            )}
+            <RelatedHorizontalList data={data} />
+            {data.recommendations.edges.length == 0 ? (
+              <View></View>
+            ) : (
+              <Text
+                style={{
+                  marginLeft: 10,
+                  marginTop: 30,
+                  color: "white",
+                  fontSize: 15
+                }}
+              >
+                Recommendations
+              </Text>
+            )}
+            <RecommendationHorizontalList data={data} />
           </ScrollView>
         </ImageBackground>
       );

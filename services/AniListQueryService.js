@@ -36,6 +36,23 @@ export function getInfo(id = 1, type = "ANIME") {
           relationType
         }
       }
+      recommendations {
+      edges {
+        node {
+          id
+          mediaRecommendation {
+            id
+            type
+            coverImage {
+              large
+            }
+            title {
+              romaji
+            }
+          }
+        }
+      }
+    }
     }
   }
   `;
@@ -61,9 +78,6 @@ export function getInfo(id = 1, type = "ANIME") {
       return response.json().then(function(json) {
         return response.ok ? json : Promise.reject(json);
       });
-    })
-    .then(responseJson => {
-      return responseJson;
     })
     .catch(e => console.log(e));
 }
@@ -102,9 +116,6 @@ export function getEntryinfo(type = "ANIME", sort = "POPULARITY_DESC") {
       return response.json().then(function(json) {
         return response.ok ? json : Promise.reject(json);
       });
-    })
-    .then(responseJson => {
-      return responseJson;
     })
     .catch(e => console.log(e));
 }
@@ -282,8 +293,37 @@ export function addEntryToList(mediaId, status, score, progress) {
           return response.ok ? json : Promise.reject(json);
         });
       })
-      .then(responseJson => console.log(`${status}, ${responseJson}`))
       .catch(error => console.log(error.message));
+  });
+}
+
+export function deleteEntryFromList(id) {
+  return AsyncStorage.getItem("@AccessToken:key").then(accessToken => {
+    let query = `
+    mutation {
+      DeleteMediaListEntry(id: ${id}) {
+        deleted
+      }
+    }
+    `;
+
+    let url = "https://graphql.anilist.co",
+      options = {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + accessToken,
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        },
+        body: JSON.stringify({
+          query: query
+        })
+      };
+    return fetch(url, options).then(response => {
+      return response.json().then(function(json) {
+        return response.ok ? json : Promise.reject(json);
+      });
+    });
   });
 }
 
@@ -334,10 +374,12 @@ export function getUserMediaList(type) {
 }
 
 export function getUserEntryData(mediaId) {
-  return AsyncStorage.getItem("@AccessToken:key").then(accessToken => {
-    let query = `
+  return AsyncStorage.getItem("@AccessToken:key")
+    .then(accessToken => {
+      let query = `
       query {
         MediaList(userId: 341284, mediaId_in: ${mediaId}) {
+          id
           status
           score
           progress
@@ -368,22 +410,25 @@ export function getUserEntryData(mediaId) {
       }
     `;
 
-    let url = "https://graphql.anilist.co",
-      options = {
-        method: "POST",
-        headers: {
-          Authorization: "Bearer " + accessToken,
-          "Content-Type": "application/json",
-          Accept: "application/json"
-        },
-        body: JSON.stringify({
-          query: query
-        })
-      };
-    return fetch(url, options).then(response => {
-      return response.json().then(function(json) {
-        return response.ok ? json : Promise.reject(json);
+      let url = "https://graphql.anilist.co",
+        options = {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer " + accessToken,
+            "Content-Type": "application/json",
+            Accept: "application/json"
+          },
+          body: JSON.stringify({
+            query: query
+          })
+        };
+      return fetch(url, options).then(response => {
+        return response.json().then(function(json) {
+          return response.ok ? json : Promise.reject(json);
+        });
       });
+    })
+    .catch(error => {
+      return error;
     });
-  });
 }

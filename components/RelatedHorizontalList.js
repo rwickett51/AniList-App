@@ -11,7 +11,7 @@ import {
 import NavigationService from "../services/NavigationService.js";
 import ImageLoader from "../components/ImageLoader.js";
 
-export default class HorizontalList extends React.Component {
+export default class RelatedHorizontalList extends React.Component {
   render() {
     let data = this.props.data;
     return (

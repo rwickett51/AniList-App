@@ -139,7 +139,10 @@ export default class SettingsScreen extends React.Component {
           }}
           blurRadius={15}
         >
-          <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
+          <ScrollView
+            style={{flex: 1, backgroundColor: "rgba(0,0,0, 0.35)"}}
+            showsVerticalScrollIndicator={false}
+          >
             <Text style={styles.headerText}>Trending Anime</Text>
             {this.state.topanimedata == null ? (
               <ActivityIndicator />
