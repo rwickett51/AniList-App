@@ -187,8 +187,7 @@ const styles = StyleSheet.create({
     width: 170,
     resizeMode: "cover",
     alignSelf: "center",
-    marginTop: 90,
-    borderWidth: 5
+    marginTop: 90
   },
   bannerimg: {
     position: "absolute",

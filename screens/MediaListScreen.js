@@ -10,7 +10,8 @@ import {
   ActivityIndicator,
   Image,
   TouchableOpacity,
-  ImageBackground
+  ImageBackground,
+  RefreshControl
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import ImageLoader from "../components/ImageLoader.js";
@@ -23,16 +24,21 @@ export default class SettingsScreen extends React.Component {
   //Class Constructor
   constructor(props) {
     super(props);
-    this.state = {listData: null, isLoading: true};
+    this.state = {listData: null, isLoading: true, refreshing: false};
   }
 
   //Called After render(). Recalls render() when finished
   componentDidMount() {
+    this.updateUI();
+  }
+
+  updateUI = () => {
+    this.setState({refreshing: true});
     getUserMediaList(this.props.navigation.state.params.type).then(data => {
       console.log(data);
-      this.setState({listData: data, isLoading: false});
+      this.setState({listData: data, isLoading: false, refreshing: false});
     });
-  }
+  };
 
   //Header Options
   static navigationOptions = ({navigation}) => {
@@ -80,6 +86,11 @@ export default class SettingsScreen extends React.Component {
           blurRadius={15}
         >
           <ScrollView style={{backgroundColor: "rgba(0,0,0, 0.07)"}}>
+            <RefreshControl
+              onRefresh={() => this.updateUI()}
+              colors="white"
+              refreshing={this.state.refreshing}
+            />
             {this.state.listData.data.MediaListCollection.lists.map(obj => {
               return (
                 <View>

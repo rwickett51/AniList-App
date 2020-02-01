@@ -17,6 +17,7 @@ import SearchScreen from "../screens/SearchScreen.js";
 import LoginScreen from "../screens/LoginScreen.js";
 import EditEntryScreen from "../screens/EditEntryScreen.js";
 import MediaListScreen from "../screens/MediaListScreen.js";
+import CharacterScreen from "../screens/CharacterScreen.js";
 
 const Settings = createStackNavigator({
   Settings: {
@@ -36,6 +37,9 @@ const Navigator = createStackNavigator({
   },
   EditEntry: {
     screen: EditEntryScreen
+  },
+  Character: {
+    screen: CharacterScreen
   }
 });
 
@@ -74,10 +78,42 @@ const Login = createStackNavigator({
 //Drawer Tab
 const DrawerStack = createDrawerNavigator(
   {
-    Home: {screen: Navigator},
-    Settings: {screen: Settings},
-    List: {screen: MediaList},
-    Login: {screen: Login}
+    Home: {
+      screen: createStackNavigator({
+        Home: {
+          screen: HomeScreen
+        },
+        Details: {
+          screen: MediaDescriptionScreen
+        },
+        Search: {
+          screen: SearchScreen
+        },
+        EditEntry: {
+          screen: EditEntryScreen
+        },
+        Character: {
+          screen: CharacterScreen
+        }
+      })
+    },
+    Settings: {
+      screen: createStackNavigator({
+        Settings: {
+          screen: SettingsScreen
+        }
+      })
+    },
+    List: {
+      screen: MediaList
+    },
+    Login: {
+      screen: createStackNavigator({
+        Login: {
+          screen: LoginScreen
+        }
+      })
+    }
   },
   {
     initialRouteName: "Home"

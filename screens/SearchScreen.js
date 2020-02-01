@@ -248,11 +248,7 @@ export default class SettingsScreen extends React.Component {
                     key={obj.id}
                     activeOpacity={0.5}
                     onPress={() =>
-                      NavigationService.navigate("Details", {
-                        itemId: obj.id,
-                        title: obj.title.romaji,
-                        type: "MANGA"
-                      })
+                      NavigationService.navigate("Character", {id: obj.id})
                     }
                   >
                     <View style={{flexDirection: "row"}}>

@@ -39,7 +39,8 @@ export default class SettingsScreen extends React.Component {
   };
 
   _onNavigationStateChange(webViewState) {
-    if (!this.state.initialLoad) {
+    //console.log(webViewState.url);
+    if (this.state.initialLoad == false) {
       this.setState({showWeb: false});
       //console.log(webViewState.url);
       let url = webViewState.url.replace(
@@ -54,7 +55,11 @@ export default class SettingsScreen extends React.Component {
         myJson[hash[0]] = hash[1];
       }
       AsyncStorage.setItem("@AccessToken:key", myJson.access_token.toString());
-    } else {
+    }
+    if (
+      webViewState.url !=
+      "https://anilist.co/login?apiVersion=v2&client_id=3076&response_type=token&"
+    ) {
       this.setState({initialLoad: false});
     }
   }

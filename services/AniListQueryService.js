@@ -220,6 +220,7 @@ export function searchCharacterRecommendations(search) {
     query ($page: Int, $perPage: Int, $search: String) {
       Page(page: $page, perPage: $perPage) {
         characters (search: $search) {
+          id
           name {
             first
             last
@@ -431,4 +432,62 @@ export function getUserEntryData(mediaId) {
     .catch(error => {
       return error;
     });
+}
+
+export function getCharacterInfo(id) {
+  let query = `
+    query ($id: Int) {
+    Character(id: $id) {
+      description(asHtml: false)
+      image {
+        large
+      }
+      name {
+        first
+        last
+        full
+        native
+      }
+      media {
+        edges {
+          characterRole
+          node {
+            id
+            type
+            coverImage {
+              large
+            }
+            title {
+              romaji
+            }
+          }
+        }
+      }
+    }
+  }`;
+
+  let variables = {
+    id: id
+  };
+
+  let url = "https://graphql.anilist.co",
+    options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      },
+      body: JSON.stringify({
+        query: query,
+        variables: variables
+      })
+    };
+
+  return fetch(url, options)
+    .then(response => {
+      return response.json().then(function(json) {
+        return response.ok ? json : Promise.reject(json);
+      });
+    })
+    .catch(e => console.log(e));
 }

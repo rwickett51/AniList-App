@@ -28,7 +28,7 @@ export default class SettingsScreen extends React.Component {
     AsyncStorage.getItem("@Settings:value").then(value => {
       this.setState({
         isLoading: false,
-        allowAdult: value == "true"
+        allowAdult: value == null ? false : value == "true"
       });
       console.log("After Mounting(Settings): ", value);
     });
