@@ -22,6 +22,7 @@ import NavigationService from "../services/NavigationService.js";
 import {getInfo, addEntryToList} from "../services/AniListQueryService.js";
 import RelatedHorizontalList from "../components/RelatedHorizontalList.js";
 import RecommendationHorizontalList from "../components/RecommendationHorizontalList.js";
+import MediaCharacterHorizontalList from "../components/MediaCharacterHorizontalList.js";
 import ImageLoader from "../components/ImageLoader.js";
 import {TextButton, RaisedTextButton} from "react-native-material-buttons";
 export default class DescriptionScreen extends React.Component {
@@ -61,12 +62,11 @@ export default class DescriptionScreen extends React.Component {
   };
 
   componentDidMount() {
-    console.log(this.props.navigation.state.params.itemId);
     getInfo(
       this.props.navigation.state.params.itemId,
       this.props.navigation.state.params.type
     ).then(data => {
-      console.log(data);
+      //console.log(data);
       this.setState({data: data, isLoading: false});
     });
   }
@@ -174,6 +174,17 @@ export default class DescriptionScreen extends React.Component {
               </Text>
             )}
             <RecommendationHorizontalList data={data} />
+            <Text
+              style={{
+                marginLeft: 10,
+                marginTop: 30,
+                color: "white",
+                fontSize: 15
+              }}
+            >
+              Characters
+            </Text>
+            <MediaCharacterHorizontalList data={data} />
           </ScrollView>
         </ImageBackground>
       );

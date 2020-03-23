@@ -36,23 +36,48 @@ export function getInfo(id = 1, type = "ANIME") {
           relationType
         }
       }
-      recommendations {
-      edges {
-        node {
-          id
-          mediaRecommendation {
+      characters (sort: ROLE){
+        edges {
+          role
+          node {
             id
-            type
-            coverImage {
-              large
+            image {
+              medium
             }
-            title {
-              romaji
+            name {
+              full
+              native
+            }
+          }
+          voiceActors {
+            id
+            image {
+              medium
+            }
+            name {
+              full
+              native
             }
           }
         }
       }
-    }
+      recommendations {
+        edges {
+          node {
+            id
+            mediaRecommendation {
+              id
+              type
+              coverImage {
+                large
+              }
+              title {
+                romaji
+              }
+            }
+          }
+        }
+      }
     }
   }
   `;
@@ -172,6 +197,7 @@ export function searchStaffRecommendations(search) {
     query ($page: Int, $perPage: Int, $search: String) {
       Page(page: $page, perPage: $perPage) {
         staff (search: $search) {
+          id
           name {
             first
             last
@@ -341,6 +367,7 @@ export function getUserMediaList(type) {
               mediaId
               media {
                 coverImage {
+                  medium
                   large
                 }
                 title {
@@ -465,6 +492,64 @@ export function getCharacterInfo(id) {
       }
     }
   }`;
+
+  let variables = {
+    id: id
+  };
+
+  let url = "https://graphql.anilist.co",
+    options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      },
+      body: JSON.stringify({
+        query: query,
+        variables: variables
+      })
+    };
+
+  return fetch(url, options)
+    .then(response => {
+      return response.json().then(function(json) {
+        return response.ok ? json : Promise.reject(json);
+      });
+    })
+    .catch(e => console.log(e));
+}
+
+export function getStaffInfo(id) {
+  let query = `
+    query($id: Int) {
+      Staff(id: $id) {
+        name {
+          full
+          native
+        }
+        image {
+          large
+          medium
+        }
+        id
+        description
+        staffMedia{
+          nodes{
+            type
+            id
+            title {
+              romaji
+              english
+              native
+              userPreferred
+            }
+            coverImage {
+              medium
+            }
+          }
+        }
+      }
+    }`;
 
   let variables = {
     id: id

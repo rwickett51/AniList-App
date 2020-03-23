@@ -75,7 +75,6 @@ export default class SettingsScreen extends React.Component {
     } else
       return (
         <ImageBackground
-          source={require("../assets/MediaListBackground.jpg")}
           style={{
             left: 0,
             right: 0,
@@ -113,7 +112,7 @@ export default class SettingsScreen extends React.Component {
                           style={{flexDirection: "row"}}
                         >
                           <ImageLoader
-                            source={{uri: media.media.coverImage.large}}
+                            source={{uri: media.media.coverImage.medium}}
                             style={{
                               height: 100,
                               width: 70,

@@ -18,6 +18,7 @@ import LoginScreen from "../screens/LoginScreen.js";
 import EditEntryScreen from "../screens/EditEntryScreen.js";
 import MediaListScreen from "../screens/MediaListScreen.js";
 import CharacterScreen from "../screens/CharacterScreen.js";
+import StaffScreen from "../screens/StaffScreen.js";
 
 const Settings = createStackNavigator({
   Settings: {
@@ -40,6 +41,9 @@ const Navigator = createStackNavigator({
   },
   Character: {
     screen: CharacterScreen
+  },
+  Staff: {
+    screen: StaffScreen
   }
 });
 
@@ -94,6 +98,9 @@ const DrawerStack = createDrawerNavigator(
         },
         Character: {
           screen: CharacterScreen
+        },
+        Staff: {
+          screen: StaffScreen
         }
       })
     },

@@ -167,106 +167,127 @@ export default class SettingsScreen extends React.Component {
           </View>
         </View>
         <ScrollView>
-          {this.generateMediaList("Anime", this.state.animedata)}
-          {this.generateMediaList("Manga", this.state.mangadata)}
-          <View>
-            <Text
-              style={{
-                color: "white",
-                marginLeft: 20,
-                fontSize: 20,
-                marginTop: 10
-              }}
-            >
-              Staff
-            </Text>
-            <View
-              style={{
-                backgroundColor: "white",
-                height: 1,
-                width: "100%",
-                margin: 10
-              }}
-            ></View>
+          {this.state.animedata != null ? (
+            this.generateMediaList("Anime", this.state.animedata)
+          ) : (
+            <View></View>
+          )}
+          {this.state.mangadata != null ? (
+            this.generateMediaList("Manga", this.state.mangadata)
+          ) : (
+            <View></View>
+          )}
+
+          {this.state.staffdata != null ? (
             <View>
-              {this.state.staffdata == null ? (
-                <Text>''</Text>
-              ) : (
-                this.state.staffdata.data.Page.staff.map(obj => (
-                  <TouchableOpacity
-                    key={obj.id}
-                    activeOpacity={0.5}
-                    onPress={() =>
-                      NavigationService.navigate("Details", {
-                        itemId: obj.id,
-                        title: obj.title.romaji,
-                        type: "MANGA"
-                      })
-                    }
-                  >
-                    <View style={{flexDirection: "row"}}>
-                      <Image
-                        source={{uri: obj.image.large}}
-                        style={styles.img}
-                      />
-                      <Text
-                        style={{color: "white", marginTop: 15, marginLeft: 15}}
-                      >
-                        {obj.name.last}, {obj.name.first}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                ))
-              )}
+              <Text
+                style={{
+                  color: "white",
+                  marginLeft: 20,
+                  fontSize: 20,
+                  marginTop: 10
+                }}
+              >
+                Staff
+              </Text>
+              <View
+                style={{
+                  backgroundColor: "white",
+                  height: 1,
+                  width: "100%",
+                  margin: 10
+                }}
+              ></View>
+              <View>
+                {this.state.staffdata == null ? (
+                  <Text>''</Text>
+                ) : (
+                  this.state.staffdata.data.Page.staff.map(obj => (
+                    <TouchableOpacity
+                      key={obj.id}
+                      activeOpacity={0.5}
+                      onPress={() =>
+                        NavigationService.navigate("Staff", {id: obj.id})
+                      }
+                    >
+                      <View style={{flexDirection: "row"}}>
+                        <Image
+                          source={{uri: obj.image.large}}
+                          style={styles.img}
+                        />
+                        <Text
+                          style={{
+                            color: "white",
+                            marginTop: 15,
+                            marginLeft: 15
+                          }}
+                        >
+                          {obj.name.last}, {obj.name.first}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  ))
+                )}
+              </View>
             </View>
-          </View>
-          <View>
-            <Text
-              style={{
-                color: "white",
-                marginLeft: 20,
-                fontSize: 20,
-                marginTop: 10
-              }}
-            >
-              Characters
-            </Text>
-            <View
-              style={{
-                backgroundColor: "white",
-                height: 1,
-                width: "100%",
-                margin: 10
-              }}
-            ></View>
+          ) : (
+            <View></View>
+          )}
+          {this.state.characterdata != null ? (
             <View>
-              {this.state.characterdata == null ? (
-                <Text>''</Text>
-              ) : (
-                this.state.characterdata.data.Page.characters.map(obj => (
-                  <TouchableOpacity
-                    key={obj.id}
-                    activeOpacity={0.5}
-                    onPress={() =>
-                      NavigationService.navigate("Character", {id: obj.id})
-                    }
-                  >
-                    <View style={{flexDirection: "row"}}>
-                      <Image
-                        source={{uri: obj.image.large}}
-                        style={styles.img}
-                      />
-                      <Text
-                        style={{color: "white", marginTop: 15, marginLeft: 15}}
-                      >
-                        {obj.name.last}, {obj.name.first}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                ))
-              )}
+              <Text
+                style={{
+                  color: "white",
+                  marginLeft: 20,
+                  fontSize: 20,
+                  marginTop: 10
+                }}
+              >
+                Characters
+              </Text>
+              <View
+                style={{
+                  backgroundColor: "white",
+                  height: 1,
+                  width: "100%",
+                  margin: 10
+                }}
+              ></View>
+              <View>
+                {this.state.characterdata == null ? (
+                  <Text>''</Text>
+                ) : (
+                  this.state.characterdata.data.Page.characters.map(obj => (
+                    <TouchableOpacity
+                      key={obj.id}
+                      activeOpacity={0.5}
+                      onPress={() =>
+                        NavigationService.navigate("Character", {id: obj.id})
+                      }
+                    >
+                      <View style={{flexDirection: "row"}}>
+                        <Image
+                          source={{uri: obj.image.large}}
+                          style={styles.img}
+                        />
+                        <Text
+                          style={{
+                            color: "white",
+                            marginTop: 15,
+                            marginLeft: 15
+                          }}
+                        >
+                          {obj.name.last}, {obj.name.first}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  ))
+                )}
+              </View>
             </View>
-          </View>
+          ) : (
+            <View></View>
+          )}
         </ScrollView>
       </SafeAreaView>
     );

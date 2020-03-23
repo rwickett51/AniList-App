@@ -16,8 +16,7 @@ export default class SettingsScreen extends React.Component {
     this.state = {
       url:
         "https://anilist.co/api/v2/oauth/authorize?client_id=3076&response_type=token",
-      showWeb: true,
-      initialLoad: true
+      showWeb: true
     };
   }
 
@@ -39,10 +38,7 @@ export default class SettingsScreen extends React.Component {
   };
 
   _onNavigationStateChange(webViewState) {
-    //console.log(webViewState.url);
-    if (this.state.initialLoad == false) {
-      this.setState({showWeb: false});
-      //console.log(webViewState.url);
+    if (webViewState.url.toString().includes("access_token")) {
       let url = webViewState.url.replace(
         "https://anilist.co/api/v2/oauth/anilist.co#",
         ""
@@ -54,13 +50,9 @@ export default class SettingsScreen extends React.Component {
         hash = hashes[i].split("=");
         myJson[hash[0]] = hash[1];
       }
+      console.log(myJson);
       AsyncStorage.setItem("@AccessToken:key", myJson.access_token.toString());
-    }
-    if (
-      webViewState.url !=
-      "https://anilist.co/login?apiVersion=v2&client_id=3076&response_type=token&"
-    ) {
-      this.setState({initialLoad: false});
+      this.setState({showWeb: false});
     }
   }
 
