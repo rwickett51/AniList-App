@@ -103,7 +103,9 @@ export default class DescriptionScreen extends React.Component {
               onPress={() =>
                 NavigationService.navigate("EditEntry", {
                   mediaId: data.id,
-                  image: data.coverImage.extraLarge
+                  image: data.coverImage.extraLarge,
+                  title: data.title.romaji,
+                  type: data.type
                 })
               }
               style={{

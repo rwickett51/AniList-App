@@ -1,5 +1,6 @@
 import React from "react";
 import {AsyncStorage, Alert} from "react-native";
+import {showMessage, hideMessage} from "react-native-flash-message";
 
 export function getInfo(id = 1, type = "ANIME") {
   var query = `
@@ -289,18 +290,28 @@ export function searchCharacterRecommendations(search) {
   });
 }
 
-export function addEntryToList(mediaId, status, score, progress) {
-  AsyncStorage.getItem("@AccessToken:key").then(accessToken => {
+export function addEntryToList(
+  mediaId,
+  status,
+  score,
+  progress,
+  startday,
+  startmonth,
+  startyear,
+  finishday,
+  finishmonth,
+  finishyear,
+  notes
+) {
+  return AsyncStorage.getItem("@AccessToken:key").then(accessToken => {
     let query = `
       mutation {
-        SaveMediaListEntry (mediaId: ${mediaId}, status: ${status}, score: ${score}, progress: ${progress}) {
+        SaveMediaListEntry (mediaId: ${mediaId}, status: ${status}, score: ${score}, progress: ${progress}, startedAt: {year: ${startyear}, month: ${startmonth}, day: ${startday}}, completedAt: {year: ${finishyear}, month: ${finishmonth}, day: ${finishday}}, notes: """${notes}""") {
           id
           status
         }
       }
     `;
-
-    console.log(mediaId, status);
 
     let url = "https://graphql.anilist.co",
       options = {
@@ -314,7 +325,7 @@ export function addEntryToList(mediaId, status, score, progress) {
           query: query
         })
       };
-    fetch(url, options)
+    return fetch(url, options)
       .then(response => {
         return response.json().then(function(json) {
           return response.ok ? json : Promise.reject(json);
@@ -414,6 +425,7 @@ export function getUserEntryData(mediaId) {
           progressVolumes
           repeat
           private
+          notes
           startedAt {
             year
             month
@@ -568,11 +580,9 @@ export function getStaffInfo(id) {
       })
     };
 
-  return fetch(url, options)
-    .then(response => {
-      return response.json().then(function(json) {
-        return response.ok ? json : Promise.reject(json);
-      });
-    })
-    .catch(e => console.log(e));
+  return fetch(url, options).then(response => {
+    return response.json().then(function(json) {
+      return response.ok ? json : Promise.reject(json);
+    });
+  });
 }
