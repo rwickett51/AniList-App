@@ -5,6 +5,8 @@ import {createAppContainer} from "react-navigation";
 import {createStackNavigator} from "react-navigation-stack";
 import {createDrawerNavigator} from "react-navigation-drawer";
 import {createMaterialTopTabNavigator} from "react-navigation-tabs";
+import {createMaterialBottomTabNavigator} from "react-navigation-material-bottom-tabs";
+import Icon from "react-native-vector-icons/Ionicons";
 
 //Services
 import NavigationService from "../services/NavigationService.js";
@@ -80,50 +82,53 @@ const Login = createStackNavigator({
 });
 
 //Drawer Tab
-const DrawerStack = createDrawerNavigator(
+const DrawerStack = createMaterialBottomTabNavigator(
   {
     Home: {
-      screen: createStackNavigator({
-        Home: {
-          screen: HomeScreen
-        },
-        Details: {
-          screen: MediaDescriptionScreen
-        },
-        Search: {
-          screen: SearchScreen
-        },
-        EditEntry: {
-          screen: EditEntryScreen
-        },
-        Character: {
-          screen: CharacterScreen
-        },
-        Staff: {
-          screen: StaffScreen
+      screen: Navigator,
+      navigationOptions: {
+        tabBarIcon: (focused, horizontal) => {
+          return (
+            <Icon name="ios-home" style={{color: "white", fontSize: 25}} />
+          );
         }
-      })
-    },
-    Settings: {
-      screen: createStackNavigator({
-        Settings: {
-          screen: SettingsScreen
-        }
-      })
+      }
     },
     List: {
-      screen: MediaList
-    },
-    Login: {
-      screen: createStackNavigator({
-        Login: {
-          screen: LoginScreen
+      screen: MediaList,
+      navigationOptions: {
+        tabBarIcon: (focused, horizontal) => {
+          return (
+            <Icon name="ios-journal" style={{color: "white", fontSize: 25}} />
+          );
         }
-      })
+      }
+    },
+    Settings: {
+      screen: Settings,
+      navigationOptions: {
+        tabBarIcon: (focused, horizontal) => {
+          return (
+            <Icon name="ios-settings" style={{color: "white", fontSize: 25}} />
+          );
+        }
+      }
+    },
+
+    Login: {
+      screen: Login,
+      navigationOptions: {
+        tabBarIcon: (focused, horizontal) => {
+          return (
+            <Icon name="ios-contact" style={{color: "white", fontSize: 25}} />
+          );
+        }
+      }
     }
   },
   {
-    initialRouteName: "Home"
+    initialRouteName: "Home",
+    barStyle: {backgroundColor: "#2A2A2A"}
   }
 );
 

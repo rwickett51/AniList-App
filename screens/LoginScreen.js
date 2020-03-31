@@ -26,14 +26,7 @@ export default class SettingsScreen extends React.Component {
   //Header Options
   static navigationOptions = ({navigation}) => {
     return {
-      title: "Login",
-      headerLeft: () => (
-        <Icon
-          name="ios-menu"
-          onPress={() => navigation.openDrawer()}
-          style={{color: "white", fontSize: 30, marginLeft: 10, marginTop: 5}}
-        />
-      )
+      title: "Login"
     };
   };
 

@@ -48,19 +48,7 @@ export default class SettingsScreen extends React.Component {
         style: {
           backgroundColor: "#2A2A2A"
         }
-      },
-      headerLeft: () => (
-        <Icon
-          name="ios-menu"
-          onPress={() => navigation.openDrawer()}
-          style={{
-            color: "white",
-            fontSize: 30,
-            marginLeft: 10,
-            marginTop: 5
-          }}
-        />
-      )
+      }
     };
   };
 

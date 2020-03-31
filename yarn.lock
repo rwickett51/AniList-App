@@ -5241,6 +5241,11 @@ react-navigation-drawer@^2.3.3:
   resolved "https://registry.yarnpkg.com/react-navigation-drawer/-/react-navigation-drawer-2.3.3.tgz#d7e607d5e10f2b3c40ab7dc9720228ce3f888a0f"
   integrity sha512-d/rA8Slqv7HoMfONKVDBQUrRF7YQH796Gzal/KOhaY4VOwUUqIwfxMRJ3WrsdL2OkDPixtkXJE2Fz6KAj658uA==
 
+react-navigation-material-bottom-tabs@^2.2.9:
+  version "2.2.9"
+  resolved "https://registry.yarnpkg.com/react-navigation-material-bottom-tabs/-/react-navigation-material-bottom-tabs-2.2.9.tgz#a246071c9e8a8401490e04b48979e383fdfa9321"
+  integrity sha512-ftAQ10DGRuF8dpA+RT15vjCqIZcfA8e5wn3xJR9Lc9Htm0Qo42/MQ0JMTXFKeCAmppqoVmMea2bRDtc4vqMwew==
+
 react-navigation-stack@^2.0.1:
   version "2.0.16"
   resolved "https://registry.yarnpkg.com/react-navigation-stack/-/react-navigation-stack-2.0.16.tgz#083ee644eeb600782222ff1d9ef6df939120ec8a"
