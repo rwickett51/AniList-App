@@ -43,7 +43,6 @@ export default class SettingsScreen extends React.Component {
         hash = hashes[i].split("=");
         myJson[hash[0]] = hash[1];
       }
-      console.log(myJson);
       AsyncStorage.setItem("@AccessToken:key", myJson.access_token.toString());
       this.setState({showWeb: false});
     }

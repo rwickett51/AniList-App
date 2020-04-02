@@ -28,6 +28,8 @@ import ModalMessage from "../components/ModalMessage.js";
 import KeyboardDismiss from "../components/KeyboardDismiss.js";
 import {showMessage, hideMessage} from "react-native-flash-message";
 
+//Import Services
+import NavigationService from "../services/NavigationService.js";
 import {
   getUserEntryData,
   addEntryToList,
@@ -174,6 +176,7 @@ export default class SettingsScreen extends React.Component {
                       <RaisedTextButton
                         title="Yes"
                         onPress={() => {
+                          NavigationService.goBack();
                           deleteEntryFromList(
                             this.state.data.data.MediaList.id
                           ).then(data => {
@@ -519,7 +522,7 @@ export default class SettingsScreen extends React.Component {
                       else
                         showMessage({
                           icon: "auto",
-                          message: "Edit Faiure",
+                          message: "Edit Failure",
                           type: "danger"
                         });
                     });

@@ -154,7 +154,7 @@ export default class SettingsScreen extends React.Component {
                 marginLeft: 10,
                 marginTop: 2
               }}
-              onPress={() => NavigationService.navigate("Home")}
+              onPress={() => NavigationService.goBack()}
             />
             <TextInput
               value={this.state.search}

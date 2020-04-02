@@ -586,3 +586,70 @@ export function getStaffInfo(id) {
     });
   });
 }
+export function getViewerId() {
+  return AsyncStorage.getItem("@AccessToken:key")
+    .then(accessToken => {
+      let query = `query {
+        Viewer {
+          id
+          name
+        }
+      }`;
+
+      let url = "https://graphql.anilist.co",
+        options = {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer " + accessToken,
+            "Content-Type": "application/json",
+            Accept: "application/json"
+          },
+          body: JSON.stringify({
+            query: query
+          })
+        };
+      return fetch(url, options).then(response => {
+        return response.json().then(function(json) {
+          return response.ok ? json : Promise.reject(json);
+        });
+      });
+    })
+    .catch(error => {
+      return error;
+    });
+}
+export function getBasicUserInfo() {
+  return AsyncStorage.getItem("@AccessToken:key")
+    .then(accessToken => {
+      let query = `query {
+        User (id: ${341284}) {
+          name
+          avatar {
+            medium
+            large
+          }
+        }
+      }`;
+
+      let url = "https://graphql.anilist.co",
+        options = {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer " + accessToken,
+            "Content-Type": "application/json",
+            Accept: "application/json"
+          },
+          body: JSON.stringify({
+            query: query
+          })
+        };
+      return fetch(url, options).then(response => {
+        return response.json().then(function(json) {
+          return response.ok ? json : Promise.reject(json);
+        });
+      });
+    })
+    .catch(error => {
+      return error;
+    });
+}

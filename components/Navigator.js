@@ -3,7 +3,7 @@ import React, {Component} from "react";
 //Dependencies
 import {createAppContainer} from "react-navigation";
 import {createStackNavigator} from "react-navigation-stack";
-import {createDrawerNavigator} from "react-navigation-drawer";
+import {createDrawerNavigator, DrawerItems} from "react-navigation-drawer";
 import {createMaterialTopTabNavigator} from "react-navigation-tabs";
 import {createMaterialBottomTabNavigator} from "react-navigation-material-bottom-tabs";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -21,7 +21,9 @@ import EditEntryScreen from "../screens/EditEntryScreen.js";
 import MediaListScreen from "../screens/MediaListScreen.js";
 import CharacterScreen from "../screens/CharacterScreen.js";
 import StaffScreen from "../screens/StaffScreen.js";
+import DrawerScreen from "./Drawer.js";
 
+//Stack Navigators
 const Settings = createStackNavigator({
   Settings: {
     screen: SettingsScreen
@@ -46,6 +48,9 @@ const Navigator = createStackNavigator({
   },
   Staff: {
     screen: StaffScreen
+  },
+  Settings: {
+    screen: SettingsScreen
   }
 });
 
@@ -72,6 +77,12 @@ const MediaList = createStackNavigator({
   },
   EditEntry: {
     screen: EditEntryScreen
+  },
+  Character: {
+    screen: CharacterScreen
+  },
+  Staff: {
+    screen: StaffScreen
   }
 });
 
@@ -82,14 +93,17 @@ const Login = createStackNavigator({
 });
 
 //Drawer Tab
-const DrawerStack = createMaterialBottomTabNavigator(
+const TabStack = createMaterialBottomTabNavigator(
   {
     Home: {
       screen: Navigator,
+      tabBarOptions: {
+        activeTintColor: "red"
+      },
       navigationOptions: {
-        tabBarIcon: (focused, horizontal) => {
+        tabBarIcon: ({tintColor}) => {
           return (
-            <Icon name="ios-home" style={{color: "white", fontSize: 25}} />
+            <Icon name="ios-home" style={{color: tintColor, fontSize: 25}} />
           );
         }
       }
@@ -97,9 +111,10 @@ const DrawerStack = createMaterialBottomTabNavigator(
     List: {
       screen: MediaList,
       navigationOptions: {
-        tabBarIcon: (focused, horizontal) => {
+        tabBarBadge: true,
+        tabBarIcon: ({tintColor}) => {
           return (
-            <Icon name="ios-journal" style={{color: "white", fontSize: 25}} />
+            <Icon name="ios-journal" style={{color: tintColor, fontSize: 25}} />
           );
         }
       }
@@ -107,20 +122,12 @@ const DrawerStack = createMaterialBottomTabNavigator(
     Settings: {
       screen: Settings,
       navigationOptions: {
-        tabBarIcon: (focused, horizontal) => {
+        tabBarIcon: ({tintColor}) => {
           return (
-            <Icon name="ios-settings" style={{color: "white", fontSize: 25}} />
-          );
-        }
-      }
-    },
-
-    Login: {
-      screen: Login,
-      navigationOptions: {
-        tabBarIcon: (focused, horizontal) => {
-          return (
-            <Icon name="ios-contact" style={{color: "white", fontSize: 25}} />
+            <Icon
+              name="ios-settings"
+              style={{color: tintColor, fontSize: 25}}
+            />
           );
         }
       }
@@ -128,7 +135,18 @@ const DrawerStack = createMaterialBottomTabNavigator(
   },
   {
     initialRouteName: "Home",
-    barStyle: {backgroundColor: "#2A2A2A"}
+    barStyle: {backgroundColor: "#2A2A2A"},
+    activeColor: "cyan",
+    inactiveColor: "white"
+  }
+);
+
+const DrawerStack = createDrawerNavigator(
+  {
+    Default: TabStack
+  },
+  {
+    contentComponent: DrawerScreen
   }
 );
 
