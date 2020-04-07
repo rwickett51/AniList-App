@@ -8,11 +8,13 @@ import {
   Button,
   AsyncStorage,
   Switch,
-  Alert
+  Alert,
+  TouchableWithoutFeedback
 } from "react-native";
 import {LinearGradient} from "expo-linear-gradient";
 import Icon from "react-native-vector-icons/Ionicons";
 import {getViewerId} from "../services/AniListQueryService.js";
+import Collapsible from "react-native-collapsible";
 
 export default class SettingsScreen extends React.Component {
   constructor(props) {
@@ -28,7 +30,8 @@ export default class SettingsScreen extends React.Component {
     AsyncStorage.getItem("@Settings:value").then(value => {
       this.setState({
         isLoading: false,
-        allowAdult: value == null ? false : value == "true"
+        allowAdult: value == null ? false : value == "true",
+        isCollapsed: true
       });
       console.log("After Mounting(Settings): ", value);
     });
@@ -52,6 +55,16 @@ export default class SettingsScreen extends React.Component {
     if (this.state.isLoading) {
       return <View></View>;
     } else {
+      const SECTIONS = [
+        {
+          title: "First",
+          content: "Lorem ipsum..."
+        },
+        {
+          title: "Second",
+          content: "Lorem ipsum..."
+        }
+      ];
       return (
         <ScrollView>
           <View
@@ -76,14 +89,38 @@ export default class SettingsScreen extends React.Component {
               style={{marginRight: 20}}
             />
           </View>
-          <Button
-            title="Test"
+          <TouchableWithoutFeedback
             onPress={() => {
-              getViewerId().then(data => {
-                console.log(data);
-              });
+              this.setState({isCollapsed: !this.state.isCollapsed});
             }}
-          />
+          >
+            <Collapsible
+              collapsed={this.state.isCollapsed}
+              style={{backgroundColor: "red"}}
+              collapsedHeight={30}
+            >
+              <Button
+                title="Test2"
+                onPress={() => {
+                  getViewerId().then(data => {
+                    console.log(data);
+                  });
+                }}
+              />
+              <Text style={{margin: 20, color: "white", fontSize: 20}}>
+                Setting 1
+              </Text>
+              <Text style={{margin: 20, color: "white", fontSize: 20}}>
+                Setting 1
+              </Text>
+              <Text style={{margin: 20, color: "white", fontSize: 20}}>
+                Setting 1
+              </Text>
+              <Text style={{margin: 20, color: "white", fontSize: 20}}>
+                Setting 1
+              </Text>
+            </Collapsible>
+          </TouchableWithoutFeedback>
         </ScrollView>
       );
     }

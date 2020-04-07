@@ -4,9 +4,11 @@ import React from "react";
 import {
   SafeAreaView,
   ScrollView,
+  StyleSheet,
   Image,
   Text,
-  TouchableOpacity
+  TouchableOpacity,
+  TouchableHighlight
 } from "react-native";
 import {createDrawerNavigator, DrawerItems} from "react-navigation-drawer";
 
@@ -46,12 +48,7 @@ export default class DrawerScreen extends React.Component {
             source={{
               uri: this.state.URL
             }}
-            style={{
-              height: 150,
-              width: 150,
-              borderRadius: 75,
-              alignSelf: "center"
-            }}
+            style={styles.profileImage}
           />
           <Text
             style={{
@@ -63,7 +60,7 @@ export default class DrawerScreen extends React.Component {
             {this.state.name}
           </Text>
           <TouchableOpacity
-            style={{height: 200, width: 100, backgroundColor: "red"}}
+            style={{height: 200, backgroundColor: "red"}}
             onPress={() => NavigationService.navigate("Settings")}
           ></TouchableOpacity>
           <DrawerItems {...this.props} />
@@ -72,3 +69,12 @@ export default class DrawerScreen extends React.Component {
     );
   }
 }
+
+var styles = StyleSheet.create({
+  profileImage: {
+    height: 150,
+    width: 150,
+    borderRadius: 75,
+    alignSelf: "center"
+  }
+});

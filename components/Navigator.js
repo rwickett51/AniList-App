@@ -13,7 +13,7 @@ import NavigationService from "../services/NavigationService.js";
 
 //Screens
 import MediaDescriptionScreen from "../screens/MediaDescriptionScreen.js";
-import HomeScreen from "../screens/HomeScreen.js";
+import DiscoverScreen from "../screens/DiscoverScreen.js";
 import SettingsScreen from "../screens/SettingsScreen.js";
 import SearchScreen from "../screens/SearchScreen.js";
 import LoginScreen from "../screens/LoginScreen.js";
@@ -22,6 +22,8 @@ import MediaListScreen from "../screens/MediaListScreen.js";
 import CharacterScreen from "../screens/CharacterScreen.js";
 import StaffScreen from "../screens/StaffScreen.js";
 import DrawerScreen from "./Drawer.js";
+import HomeScreen from "../screens/HomeScreen.js";
+import ForumHomeScreen from "../screens/ForumHomeScreen.js";
 
 //Stack Navigators
 const Settings = createStackNavigator({
@@ -30,9 +32,29 @@ const Settings = createStackNavigator({
   }
 });
 
+const Forum = createStackNavigator({
+  Settings: {
+    screen: ForumHomeScreen
+  }
+});
+
+const HomeTabs = createMaterialTopTabNavigator(
+  {
+    Activity: {
+      screen: HomeScreen,
+      params: {type: "ANIME"}
+    },
+    Progress: {
+      screen: HomeScreen,
+      params: {type: "MANGA"}
+    }
+  },
+  {lazy: true, swipeEnabled: true}
+);
+
 const Navigator = createStackNavigator({
-  Home: {
-    screen: HomeScreen
+  Discover: {
+    screen: DiscoverScreen
   },
   Details: {
     screen: MediaDescriptionScreen
@@ -53,6 +75,61 @@ const Navigator = createStackNavigator({
     screen: SettingsScreen
   }
 });
+
+const Home = createStackNavigator(
+  {
+    Home: {
+      screen: HomeTabs
+    },
+    Details: {
+      screen: MediaDescriptionScreen
+    },
+    Search: {
+      screen: SearchScreen
+    },
+    EditEntry: {
+      screen: EditEntryScreen
+    },
+    Character: {
+      screen: CharacterScreen
+    },
+    Staff: {
+      screen: StaffScreen
+    },
+    Settings: {
+      screen: SettingsScreen
+    }
+  },
+  {
+    initialRouteName: "Home"
+  }
+);
+
+const Search = createStackNavigator(
+  {
+    Details: {
+      screen: MediaDescriptionScreen
+    },
+    Search: {
+      screen: SearchScreen
+    },
+    EditEntry: {
+      screen: EditEntryScreen
+    },
+    Character: {
+      screen: CharacterScreen
+    },
+    Staff: {
+      screen: StaffScreen
+    },
+    Settings: {
+      screen: SettingsScreen
+    }
+  },
+  {
+    initialRouteName: "Search"
+  }
+);
 
 const MediaLists = createMaterialTopTabNavigator(
   {
@@ -95,11 +172,31 @@ const Login = createStackNavigator({
 //Drawer Tab
 const TabStack = createMaterialBottomTabNavigator(
   {
-    Home: {
+    Discover: {
       screen: Navigator,
       tabBarOptions: {
         activeTintColor: "red"
       },
+      navigationOptions: {
+        tabBarIcon: ({tintColor}) => {
+          return (
+            <Icon name="ios-compass" style={{color: tintColor, fontSize: 25}} />
+          );
+        }
+      }
+    },
+    List: {
+      screen: MediaList,
+      navigationOptions: {
+        tabBarIcon: ({tintColor}) => {
+          return (
+            <Icon name="ios-journal" style={{color: tintColor, fontSize: 25}} />
+          );
+        }
+      }
+    },
+    Home: {
+      screen: Home,
       navigationOptions: {
         tabBarIcon: ({tintColor}) => {
           return (
@@ -108,24 +205,23 @@ const TabStack = createMaterialBottomTabNavigator(
         }
       }
     },
-    List: {
-      screen: MediaList,
+    Search: {
+      screen: Search,
       navigationOptions: {
-        tabBarBadge: true,
         tabBarIcon: ({tintColor}) => {
           return (
-            <Icon name="ios-journal" style={{color: tintColor, fontSize: 25}} />
+            <Icon name="ios-search" style={{color: tintColor, fontSize: 25}} />
           );
         }
       }
     },
-    Settings: {
-      screen: Settings,
+    Forum: {
+      screen: Forum,
       navigationOptions: {
         tabBarIcon: ({tintColor}) => {
           return (
             <Icon
-              name="ios-settings"
+              name="ios-list-box"
               style={{color: tintColor, fontSize: 25}}
             />
           );

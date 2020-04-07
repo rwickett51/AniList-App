@@ -653,3 +653,53 @@ export function getBasicUserInfo() {
       return error;
     });
 }
+
+export function getUserActivity(id) {
+  return AsyncStorage.getItem("@AccessToken:key")
+    .then(accessToken => {
+      let query = `
+      query {
+        Page {
+          ListFields: activities(userId: ${id}, sort: ID_DESC) {
+            ... on ListActivity {
+              id
+              progress
+              status
+              media {
+                id
+                type
+                title {
+                  romaji
+                }
+                coverImage {
+                  medium
+                }
+              }
+            }
+          }
+        }
+      }
+      `;
+
+      let url = "https://graphql.anilist.co",
+        options = {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer " + accessToken,
+            "Content-Type": "application/json",
+            Accept: "application/json"
+          },
+          body: JSON.stringify({
+            query: query
+          })
+        };
+      return fetch(url, options).then(response => {
+        return response.json().then(function(json) {
+          return response.ok ? json : Promise.reject(json);
+        });
+      });
+    })
+    .catch(error => {
+      return error;
+    });
+}

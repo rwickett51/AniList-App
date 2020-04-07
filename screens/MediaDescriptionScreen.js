@@ -11,13 +11,13 @@ import {
   Alert,
   AsyncStorage,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   Picker,
   ImageBackground
 } from "react-native";
 import {createAppContainer} from "react-navigation";
 import {createStackNavigator} from "react-navigation-stack";
 import {LinearGradient} from "expo-linear-gradient";
-import Home from "./HomeScreen.js";
 import NavigationService from "../services/NavigationService.js";
 import {getInfo, addEntryToList} from "../services/AniListQueryService.js";
 import RelatedHorizontalList from "../components/RelatedHorizontalList.js";
@@ -25,13 +25,18 @@ import RecommendationHorizontalList from "../components/RecommendationHorizontal
 import MediaCharacterHorizontalList from "../components/MediaCharacterHorizontalList.js";
 import ImageLoader from "../components/ImageLoader.js";
 import {TextButton, RaisedTextButton} from "react-native-material-buttons";
+import Collapsible from "react-native-collapsible";
+import Icon from "react-native-vector-icons/Ionicons";
 export default class DescriptionScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       isLoading: true,
       data: null,
-      selectedValue: ""
+      selectedValue: "",
+      isCollapsedReccomendation: true,
+      isCollapsedCharacters: true,
+      isCollapsedRelated: true
     };
   }
 
@@ -146,47 +151,166 @@ export default class DescriptionScreen extends React.Component {
               </Text>
             </View>
 
-            {data.relations.edges.length == 0 ? (
-              <View></View>
-            ) : (
-              <Text
-                style={{
-                  marginLeft: 10,
-                  marginTop: 30,
-                  color: "white",
-                  fontSize: 15
-                }}
-              >
-                Related
-              </Text>
-            )}
-            <RelatedHorizontalList data={data} />
-            {data.recommendations.edges.length == 0 ? (
-              <View></View>
-            ) : (
-              <Text
-                style={{
-                  marginLeft: 10,
-                  marginTop: 30,
-                  color: "white",
-                  fontSize: 15
-                }}
-              >
-                Recommendations
-              </Text>
-            )}
-            <RecommendationHorizontalList data={data} />
-            <Text
-              style={{
-                marginLeft: 10,
-                marginTop: 30,
-                color: "white",
-                fontSize: 15
+            <TouchableWithoutFeedback
+              onPress={() => {
+                this.setState({
+                  isCollapsedRelated: !this.state.isCollapsedRelated
+                });
               }}
             >
-              Characters
-            </Text>
-            <MediaCharacterHorizontalList data={data} />
+              <View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center"
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: "white",
+                      fontSize: 15,
+                      marginLeft: 15
+                    }}
+                  >
+                    Related
+                  </Text>
+                  <Icon
+                    name="ios-arrow-down"
+                    style={{
+                      color: "white",
+                      fontSize: 35,
+                      marginLeft: 10,
+                      marginRight: 15,
+                      transform: [
+                        {
+                          rotateX:
+                            this.state.isCollapsedRelated == true
+                              ? "0deg"
+                              : "180deg"
+                        }
+                      ]
+                    }}
+                  />
+                </View>
+                <View
+                  style={{
+                    borderBottomColor: "gray",
+                    borderBottomWidth: 1
+                  }}
+                />
+              </View>
+            </TouchableWithoutFeedback>
+            <Collapsible collapsed={this.state.isCollapsedRelated}>
+              <RelatedHorizontalList data={data} />
+            </Collapsible>
+            <TouchableWithoutFeedback
+              onPress={() => {
+                this.setState({
+                  isCollapsedReccomendation: !this.state
+                    .isCollapsedReccomendation
+                });
+              }}
+            >
+              <View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center"
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: "white",
+                      fontSize: 15,
+                      marginLeft: 15
+                    }}
+                  >
+                    Recommendations
+                  </Text>
+                  <Icon
+                    name="ios-arrow-down"
+                    style={{
+                      color: "white",
+                      fontSize: 35,
+                      marginLeft: 10,
+                      marginRight: 15,
+                      transform: [
+                        {
+                          rotateX:
+                            this.state.isCollapsedReccomendation == true
+                              ? "0deg"
+                              : "180deg"
+                        }
+                      ]
+                    }}
+                  />
+                </View>
+                <View
+                  style={{
+                    borderBottomColor: "gray",
+                    borderBottomWidth: 1
+                  }}
+                />
+              </View>
+            </TouchableWithoutFeedback>
+            <Collapsible collapsed={this.state.isCollapsedReccomendation}>
+              <RecommendationHorizontalList data={data} />
+            </Collapsible>
+            <TouchableWithoutFeedback
+              onPress={() => {
+                this.setState({
+                  isCollapsedCharacters: !this.state.isCollapsedCharacters
+                });
+              }}
+            >
+              <View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center"
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: "white",
+                      fontSize: 15,
+                      marginLeft: 15
+                    }}
+                  >
+                    Characters
+                  </Text>
+                  <Icon
+                    name="ios-arrow-down"
+                    style={{
+                      color: "white",
+                      fontSize: 35,
+                      marginLeft: 10,
+                      marginRight: 15,
+                      transform: [
+                        {
+                          rotateX:
+                            this.state.isCollapsedCharacters == true
+                              ? "0deg"
+                              : "180deg"
+                        }
+                      ]
+                    }}
+                  />
+                </View>
+                <View
+                  style={{
+                    borderBottomColor: "gray",
+                    borderBottomWidth: 1
+                  }}
+                />
+              </View>
+            </TouchableWithoutFeedback>
+            <Collapsible collapsed={this.state.isCollapsedCharacters}>
+              <MediaCharacterHorizontalList data={data} />
+            </Collapsible>
           </ScrollView>
         </ImageBackground>
       );
