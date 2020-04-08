@@ -17,7 +17,7 @@
     "expo": "^37.0.0",
     "expo-sqlite": "~8.1.0",
     "firebase": "^7.6.1",
-    "mem": "^6.0.1",
+    "mem": "^4.0.0",
     "react": "16.9.0",
     "react-dom": "16.9.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-37.0.0.tar.gz",
