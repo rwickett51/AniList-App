@@ -703,3 +703,82 @@ export function getUserActivity(id) {
       return error;
     });
 }
+
+export function getThreads() {
+  return AsyncStorage.getItem("@AccessToken:key")
+    .then(accessToken => {
+      let query = `
+      query {
+        Page {
+          threads(sort: UPDATED_AT_DESC) {
+            id
+            title
+            body (asHtml: false)
+            user {
+              name
+              avatar {
+                medium
+              }
+            }
+          }
+        }
+      }`;
+
+      let url = "https://graphql.anilist.co",
+        options = {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer " + accessToken,
+            "Content-Type": "application/json",
+            Accept: "application/json"
+          },
+          body: JSON.stringify({
+            query: query
+          })
+        };
+      return fetch(url, options).then(response => {
+        return response.json().then(function(json) {
+          return response.ok ? json : Promise.reject(json);
+        });
+      });
+    })
+    .catch(error => {
+      return error;
+    });
+}
+
+export function getThreadComments(id) {
+  return AsyncStorage.getItem("@AccessToken:key")
+    .then(accessToken => {
+      let query = `
+      query {
+        Page {
+          threadComments (threadId: ${id}) {
+            id
+            comment (asHtml: false)
+          }
+        }
+      }`;
+
+      let url = "https://graphql.anilist.co",
+        options = {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer " + accessToken,
+            "Content-Type": "application/json",
+            Accept: "application/json"
+          },
+          body: JSON.stringify({
+            query: query
+          })
+        };
+      return fetch(url, options).then(response => {
+        return response.json().then(function(json) {
+          return response.ok ? json : Promise.reject(json);
+        });
+      });
+    })
+    .catch(error => {
+      return error;
+    });
+}

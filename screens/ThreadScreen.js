@@ -12,13 +12,13 @@ import {
   TouchableHighlight
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
-import {showMessage, hideMessage} from "react-native-flash-message";
 
 //Import Services
 import NavigationService from "../services/NavigationService.js";
-import {getThreads} from "../services/AniListQueryService.js";
+import {getThreadComments} from "../services/AniListQueryService.js";
+import {showMessage, hideMessage} from "react-native-flash-message";
 
-export default class ForumHomeScreen extends React.Component {
+export default class SettingsScreen extends React.Component {
   //Class Constructor
   constructor(props) {
     super(props);
@@ -27,7 +27,7 @@ export default class ForumHomeScreen extends React.Component {
 
   //Called After render(). Recalls render() when finished
   componentDidMount() {
-    getThreads().then(data => {
+    getThreadComments(this.props.navigation.state.params.id).then(data => {
       if (data.data == null) {
         showMessage({
           icon: "auto",
@@ -43,14 +43,7 @@ export default class ForumHomeScreen extends React.Component {
   //Header Options
   static navigationOptions = ({navigation}) => {
     return {
-      title: "Forum",
-      headerLeft: () => (
-        <Icon
-          name="ios-menu"
-          onPress={() => navigation.openDrawer()}
-          style={{color: "white", fontSize: 30, marginLeft: 10, marginTop: 5}}
-        />
-      )
+      title: "Thread"
     };
   };
 
@@ -64,29 +57,15 @@ export default class ForumHomeScreen extends React.Component {
       );
     } else {
       return (
-        <SafeAreaView style={{flex: 1}}>
-          <ScrollView style={{flex: 1}}>
-            {this.state.data.data.Page.threads.map(obj => {
-              return (
-                <TouchableHighlight
-                  style={styles.ThreadContainer}
-                  onPress={() => {
-                    NavigationService.navigate("Thread", {id: obj.id}, obj.id);
-                  }}
-                >
-                  <View>
-                    <Text style={styles.ThreadTitle} numberOfLines={2}>
-                      {obj.title}
-                    </Text>
-                    <Text style={styles.ThreadBody} numberOfLines={5}>
-                      {obj.body}
-                    </Text>
-                  </View>
-                </TouchableHighlight>
-              );
-            })}
-          </ScrollView>
-        </SafeAreaView>
+        <ScrollView style={{flex: 1}}>
+          {this.state.data.data.Page.threadComments.map(obj => {
+            return (
+              <View style={styles.ThreadContainer}>
+                <Text style={styles.ThreadBody}>{obj.comment}</Text>
+              </View>
+            );
+          })}
+        </ScrollView>
       );
     }
   }
