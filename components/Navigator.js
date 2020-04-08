@@ -24,6 +24,7 @@ import StaffScreen from "../screens/StaffScreen.js";
 import DrawerScreen from "./Drawer.js";
 import HomeScreen from "../screens/HomeScreen.js";
 import ForumHomeScreen from "../screens/ForumHomeScreen.js";
+import ProfileScreen from "../screens/ProfileScreen.js";
 
 //Stack Navigators
 const Settings = createStackNavigator({
@@ -73,6 +74,9 @@ const Navigator = createStackNavigator({
   },
   Settings: {
     screen: SettingsScreen
+  },
+  Profile: {
+    screen: ProfileScreen
   }
 });
 
@@ -98,6 +102,9 @@ const Home = createStackNavigator(
     },
     Settings: {
       screen: SettingsScreen
+    },
+    Profile: {
+      screen: ProfileScreen
     }
   },
   {
@@ -124,6 +131,9 @@ const Search = createStackNavigator(
     },
     Settings: {
       screen: SettingsScreen
+    },
+    Profile: {
+      screen: ProfileScreen
     }
   },
   {
@@ -160,6 +170,12 @@ const MediaList = createStackNavigator({
   },
   Staff: {
     screen: StaffScreen
+  },
+  Settings: {
+    screen: SettingsScreen
+  },
+  Profile: {
+    screen: ProfileScreen
   }
 });
 

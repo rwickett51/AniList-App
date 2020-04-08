@@ -3,6 +3,7 @@ import React from "react";
 //Dependencies
 import {
   SafeAreaView,
+  View,
   ScrollView,
   StyleSheet,
   Image,
@@ -44,25 +45,18 @@ export default class DrawerScreen extends React.Component {
     return (
       <SafeAreaView style={{flex: 1}}>
         <ScrollView style={{flex: 1}}>
-          <Image
-            source={{
-              uri: this.state.URL
-            }}
-            style={styles.profileImage}
-          />
-          <Text
-            style={{
-              color: "white",
-              fontSize: 30,
-              alignSelf: "center"
-            }}
+          <TouchableHighlight
+            onPress={() => NavigationService.navigate("Profile")}
+            style={styles.profileContainer}
           >
-            {this.state.name}
-          </Text>
-          <TouchableOpacity
-            style={{height: 200, backgroundColor: "red"}}
-            onPress={() => NavigationService.navigate("Settings")}
-          ></TouchableOpacity>
+            <Image
+              source={{
+                uri: this.state.URL
+              }}
+              style={styles.profileImage}
+            />
+          </TouchableHighlight>
+          <Text style={styles.profileName}>{this.state.name}</Text>
           <DrawerItems {...this.props} />
         </ScrollView>
       </SafeAreaView>
@@ -76,5 +70,11 @@ var styles = StyleSheet.create({
     width: 150,
     borderRadius: 75,
     alignSelf: "center"
-  }
+  },
+  profileName: {
+    color: "white",
+    fontSize: 30,
+    alignSelf: "center"
+  },
+  profileContainer: {borderRadius: 75, width: 150, alignSelf: "center"}
 });
