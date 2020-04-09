@@ -9,14 +9,18 @@ import {
   Text,
   StyleSheet,
   ActivityIndicator,
-  TouchableHighlight
+  TouchableHighlight,
+  Linking
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
+import {showMessage, hideMessage} from "react-native-flash-message";
+import Markdown from "react-native-easy-markdown";
+import Autolink from "react-native-autolink";
+import defaultStyles from "../constants/MarkdownStyles.js";
 
 //Import Services
 import NavigationService from "../services/NavigationService.js";
 import {getThreadComments} from "../services/AniListQueryService.js";
-import {showMessage, hideMessage} from "react-native-flash-message";
 
 export default class SettingsScreen extends React.Component {
   //Class Constructor
@@ -43,7 +47,26 @@ export default class SettingsScreen extends React.Component {
   //Header Options
   static navigationOptions = ({navigation}) => {
     return {
-      title: "Thread"
+      title: "Thread",
+      headerRight: () => (
+        <Icon
+          name="ios-sync"
+          onPress={() =>
+            getThreadComments(navigation.state.params.id).then(data => {
+              if (data.data == null) {
+                showMessage({
+                  icon: "auto",
+                  message: "Something went wrong",
+                  type: "danger"
+                });
+              } else {
+                this.setState({isLoading: false, data: data});
+              }
+            })
+          }
+          style={{color: "white", fontSize: 30, marginRight: 10, marginTop: 5}}
+        />
+      )
     };
   };
 
@@ -58,10 +81,26 @@ export default class SettingsScreen extends React.Component {
     } else {
       return (
         <ScrollView style={{flex: 1}}>
-          {this.state.data.data.Page.threadComments.map(obj => {
+          <View style={styles.ThreadContainer}>
+            <View>
+              <Markdown markdownStyles={defaultStyles}>
+                {this.props.navigation.state.params.op.title}
+              </Markdown>
+              <Markdown markdownStyles={defaultStyles}>
+                {this.props.navigation.state.params.op.body.replace(
+                  /(<([^>]+)>)/gi,
+                  ""
+                )}
+              </Markdown>
+            </View>
+          </View>
+          {this.state.data.data.Page.threadComments.map((obj, index) => {
             return (
-              <View style={styles.ThreadContainer}>
-                <Text style={styles.ThreadBody}>{obj.comment}</Text>
+              <View style={styles.ThreadContainer} key={obj.id}>
+                <Markdown markdownStyles={defaultStyles} onLinkPress={true}>
+                  {obj.comment.replace(/(<([^>]+)>)/gi, "")}
+                </Markdown>
+                <Text style={styles.ThreadBody}>#{index + 1}</Text>
               </View>
             );
           })}
@@ -75,8 +114,7 @@ export default class SettingsScreen extends React.Component {
 var styles = StyleSheet.create({
   ThreadContainer: {
     width: "100%",
-    height: 250,
-    backgroundColor: "#232323",
+    backgroundColor: "#232323", //"#232323",
     marginBottom: 25,
     alignSelf: "center",
     borderRadius: 0,
@@ -88,7 +126,6 @@ var styles = StyleSheet.create({
     paddingBottom: 10
   },
   ThreadBody: {
-    color: "white",
-    fontSize: 14
+    color: "white"
   }
 });

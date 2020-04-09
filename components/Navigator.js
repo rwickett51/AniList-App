@@ -253,7 +253,7 @@ const TabStack = createMaterialBottomTabNavigator(
     }
   },
   {
-    initialRouteName: "Home",
+    initialRouteName: "Forum",
     barStyle: {backgroundColor: "#2A2A2A"},
     activeColor: "cyan",
     inactiveColor: "white"

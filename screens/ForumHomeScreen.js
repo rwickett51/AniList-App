@@ -13,6 +13,8 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import {showMessage, hideMessage} from "react-native-flash-message";
+import Markdown from "react-native-easy-markdown";
+import defaultStyles from "../constants/MarkdownStyles.js";
 
 //Import Services
 import NavigationService from "../services/NavigationService.js";
@@ -71,16 +73,22 @@ export default class ForumHomeScreen extends React.Component {
                 <TouchableHighlight
                   style={styles.ThreadContainer}
                   onPress={() => {
-                    NavigationService.navigate("Thread", {id: obj.id}, obj.id);
+                    NavigationService.navigate(
+                      "Thread",
+                      {
+                        id: obj.id,
+                        op: obj
+                      },
+                      obj.id
+                    );
                   }}
+                  key={obj.id}
                 >
-                  <View>
-                    <Text style={styles.ThreadTitle} numberOfLines={2}>
-                      {obj.title}
-                    </Text>
-                    <Text style={styles.ThreadBody} numberOfLines={5}>
+                  <View style={styles.BodyContainer}>
+                    <Text style={styles.ThreadTitle}>{obj.title}</Text>
+                    <Markdown markdownStyles={defaultStyles}>
                       {obj.body}
-                    </Text>
+                    </Markdown>
                   </View>
                 </TouchableHighlight>
               );
@@ -102,6 +110,10 @@ var styles = StyleSheet.create({
     alignSelf: "center",
     borderRadius: 0,
     padding: 15
+  },
+  BodyContainer: {
+    height: 200,
+    overflow: "hidden"
   },
   ThreadTitle: {
     color: "white",

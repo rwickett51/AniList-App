@@ -710,7 +710,7 @@ export function getThreads() {
       let query = `
       query {
         Page {
-          threads(sort: UPDATED_AT_DESC) {
+          threads(sort: IS_STICKY) {
             id
             title
             body (asHtml: false)
@@ -747,13 +747,13 @@ export function getThreads() {
     });
 }
 
-export function getThreadComments(id) {
+export function getThreadComments(id, order = "ID") {
   return AsyncStorage.getItem("@AccessToken:key")
     .then(accessToken => {
       let query = `
       query {
         Page {
-          threadComments (threadId: ${id}) {
+          threadComments (threadId: ${id}, sort: ${order}) {
             id
             comment (asHtml: false)
           }
