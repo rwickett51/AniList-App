@@ -22,51 +22,48 @@ import defaultStyles from "../constants/MarkdownStyles.js";
 import NavigationService from "../services/NavigationService.js";
 import {getThreadComments} from "../services/AniListQueryService.js";
 
-export default class SettingsScreen extends React.Component {
+export default class ThreadScreen extends React.Component {
   //Class Constructor
   constructor(props) {
     super(props);
-    this.state = {data: null, isLoading: true};
+    this.state = {data: null, isLoading: true, order: "ID"};
   }
 
   //Called After render(). Recalls render() when finished
   componentDidMount() {
-    getThreadComments(this.props.navigation.state.params.id).then(data => {
-      if (data.data == null) {
-        showMessage({
-          icon: "auto",
-          message: "Something went wrong",
-          type: "danger"
-        });
-      } else {
-        this.setState({isLoading: false, data: data});
+    NavigationService.setParams({getComments: this.getComments});
+    this.getComments();
+  }
+
+  getComments() {
+    let order = this.state.order;
+    if (order == "ID") {
+      this.setState({order: "ID_DESC"});
+      order = "ID_DESC";
+    } else {
+      this.setState({order: "ID"});
+      order = "ID";
+    }
+    getThreadComments(this.props.navigation.state.params.id, order).then(
+      data => {
+        if (data.data == null) {
+          showMessage({
+            icon: "auto",
+            message: "Something went wrong",
+            type: "danger"
+          });
+        } else {
+          this.setState({isLoading: false, data: data});
+        }
       }
-    });
+    );
   }
 
   //Header Options
   static navigationOptions = ({navigation}) => {
+    const {params = {}} = navigation.state;
     return {
-      title: "Thread",
-      headerRight: () => (
-        <Icon
-          name="ios-sync"
-          onPress={() =>
-            getThreadComments(navigation.state.params.id).then(data => {
-              if (data.data == null) {
-                showMessage({
-                  icon: "auto",
-                  message: "Something went wrong",
-                  type: "danger"
-                });
-              } else {
-                this.setState({isLoading: false, data: data});
-              }
-            })
-          }
-          style={{color: "white", fontSize: 30, marginRight: 10, marginTop: 5}}
-        />
-      )
+      title: "Thread"
     };
   };
 
