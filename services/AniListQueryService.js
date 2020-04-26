@@ -703,3 +703,64 @@ export function getUserActivity(id) {
       return error;
     });
 }
+
+export function getUserOptions(id) {
+  return AsyncStorage.getItem("@AccessToken:key")
+    .then(accessToken => {
+      let query = `
+  {
+    User (id: ${id}) {
+      name
+      options {
+        titleLanguage
+        displayAdultContent
+        airingNotifications
+        profileColor
+        notificationOptions {
+          enabled
+          type
+        }
+      }
+      mediaListOptions {
+        scoreFormat
+        rowOrder
+        animeList {
+          sectionOrder
+          splitCompletedSectionByFormat
+          customLists
+          advancedScoring
+          advancedScoringEnabled
+        }
+        mangaList {
+          sectionOrder
+          splitCompletedSectionByFormat
+          customLists
+          advancedScoring
+          advancedScoringEnabled
+        }
+      }
+    }
+  }`;
+
+      let url = "https://graphql.anilist.co",
+        options = {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer " + accessToken,
+            "Content-Type": "application/json",
+            Accept: "application/json"
+          },
+          body: JSON.stringify({
+            query: query
+          })
+        };
+      return fetch(url, options).then(response => {
+        return response.json().then(function(json) {
+          return response.ok ? json : Promise.reject(json);
+        });
+      });
+    })
+    .catch(error => {
+      return error;
+    });
+}
