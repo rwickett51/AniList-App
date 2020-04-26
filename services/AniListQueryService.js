@@ -704,6 +704,7 @@ export function getUserActivity(id) {
     });
 }
 
+<<<<<<< HEAD
 export function getThreads() {
   return AsyncStorage.getItem("@AccessToken:key")
     .then(accessToken => {
@@ -759,6 +760,44 @@ export function getThreadComments(id, order = "ID") {
           }
         }
       }`;
+export function getUserOptions(id) {
+  return AsyncStorage.getItem("@AccessToken:key")
+    .then(accessToken => {
+      let query = `
+  {
+    User (id: ${id}) {
+      name
+      options {
+        titleLanguage
+        displayAdultContent
+        airingNotifications
+        profileColor
+        notificationOptions {
+          enabled
+          type
+        }
+      }
+      mediaListOptions {
+        scoreFormat
+        rowOrder
+        animeList {
+          sectionOrder
+          splitCompletedSectionByFormat
+          customLists
+          advancedScoring
+          advancedScoringEnabled
+        }
+        mangaList {
+          sectionOrder
+          splitCompletedSectionByFormat
+          customLists
+          advancedScoring
+          advancedScoringEnabled
+        }
+      }
+    }
+  }`;
+>>>>>>> Profile
 
       let url = "https://graphql.anilist.co",
         options = {

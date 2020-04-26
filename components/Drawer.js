@@ -3,6 +3,7 @@ import React from "react";
 //Dependencies
 import {
   SafeAreaView,
+  View,
   ScrollView,
   StyleSheet,
   Image,
@@ -44,26 +45,46 @@ export default class DrawerScreen extends React.Component {
     return (
       <SafeAreaView style={{flex: 1}}>
         <ScrollView style={{flex: 1}}>
-          <Image
-            source={{
-              uri: this.state.URL
-            }}
-            style={styles.profileImage}
-          />
-          <Text
-            style={{
-              color: "white",
-              fontSize: 30,
-              alignSelf: "center"
+          <TouchableHighlight
+            onPress={() => NavigationService.navigate("Profile")}
+            style={styles.ProfileContainer}
+          >
+            <Image
+              source={{
+                uri: this.state.URL
+              }}
+              style={styles.ProfileImage}
+            />
+          </TouchableHighlight>
+          <Text style={styles.ProfileName}>{this.state.name}</Text>
+          <TouchableOpacity
+            style={styles.DrawerItemContainer}
+            onPress={() => {
+              NavigationService.navigate("Profile");
             }}
           >
-            {this.state.name}
-          </Text>
+            <Text style={styles.DrawerItem}>Profile</Text>
+          </TouchableOpacity>
           <TouchableOpacity
-            style={{height: 200, backgroundColor: "red"}}
-            onPress={() => NavigationService.navigate("Settings")}
-          ></TouchableOpacity>
-          <DrawerItems {...this.props} />
+            style={styles.DrawerItemContainer}
+            onPress={() => {}}
+          >
+            <Text style={styles.DrawerItem}>Notifications</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.DrawerItemContainer}
+            onPress={() => {
+              NavigationService.navigate("Settings");
+            }}
+          >
+            <Text style={styles.DrawerItem}>Settings</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.DrawerItemContainer}
+            onPress={() => {}}
+          >
+            <Text style={styles.DrawerItem}>Log Out</Text>
+          </TouchableOpacity>
         </ScrollView>
       </SafeAreaView>
     );
@@ -71,10 +92,23 @@ export default class DrawerScreen extends React.Component {
 }
 
 var styles = StyleSheet.create({
-  profileImage: {
+  ProfileImage: {
     height: 150,
     width: 150,
     borderRadius: 75,
     alignSelf: "center"
+  },
+  ProfileName: {
+    color: "white",
+    fontSize: 30,
+    alignSelf: "center"
+  },
+  ProfileContainer: {borderRadius: 75, width: 150, alignSelf: "center"},
+  DrawerItem: {color: "white", fontWeight: "bold"},
+  DrawerItemContainer: {
+    paddingLeft: 15,
+    height: 50,
+    justifyContent: "center",
+    marginTop: 5
   }
 });
