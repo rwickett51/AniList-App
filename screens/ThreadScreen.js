@@ -46,7 +46,12 @@ export default class ThreadScreen extends React.Component {
     }
     getThreadComments(this.props.navigation.state.params.id, order).then(
       data => {
-        if (data.data == null) {
+        console.log(data);
+        if (
+          data.data === null ||
+          data.data.Page === null ||
+          data == undefined
+        ) {
           showMessage({
             icon: "auto",
             message: "Something went wrong",

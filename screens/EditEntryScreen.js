@@ -499,19 +499,25 @@ export default class SettingsScreen extends React.Component {
                 <RaisedTextButton
                   title="Save"
                   onPress={() => {
-                    addEntryToList(
-                      this.props.navigation.state.params.mediaId,
-                      this.state.status,
-                      this.state.score,
-                      parseInt(this.state.progress, 10),
-                      this.state.startday,
-                      this.state.startmonth,
-                      this.state.startyear,
-                      this.state.finishday,
-                      this.state.finishmonth,
-                      this.state.finishyear,
-                      this.state.notes.length == 0 ? null : this.state.notes
-                    ).then(data => {
+                    let editData = {
+                      mediaId: this.state.data.data.MediaList.mediaId,
+                      status: this.state.status,
+                      score: this.state.score,
+                      progress: parseInt(this.state.progress, 10),
+                      startDate: {
+                        day: this.state.startday,
+                        month: this.state.startmonth,
+                        year: this.state.startyear
+                      },
+                      completeDate: {
+                        day: this.state.finishday,
+                        month: this.state.finishmonth,
+                        year: this.state.finishyear
+                      },
+                      notes:
+                        this.state.notes.length == 0 ? null : this.state.notes
+                    };
+                    addEntryToList(editData).then(data => {
                       console.log(data);
                       if (data != undefined)
                         showMessage({

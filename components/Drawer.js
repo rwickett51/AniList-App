@@ -14,7 +14,10 @@ import {
 import {createDrawerNavigator, DrawerItems} from "react-navigation-drawer";
 
 //Services
-import {getBasicUserInfo} from "../services/AniListQueryService.js";
+import {
+  getBasicUserInfo,
+  getViewerId
+} from "../services/AniListQueryService.js";
 import NavigationService from "../services/NavigationService.js";
 
 export default class DrawerScreen extends React.Component {
@@ -32,11 +35,13 @@ export default class DrawerScreen extends React.Component {
   }
 
   getBasicUserURL() {
-    return getBasicUserInfo().then(data => {
-      console.log(data);
-      this.setState({
-        URL: data.data.User.avatar.large,
-        name: data.data.User.name
+    return getViewerId().then(viewerId => {
+      getBasicUserInfo(viewerId.data.Viewer.id).then(data => {
+        console.log(data);
+        this.setState({
+          URL: data.data.User.avatar.large,
+          name: data.data.User.name
+        });
       });
     });
   }

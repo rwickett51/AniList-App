@@ -18,7 +18,10 @@ import ImageLoader from "../components/ImageLoader.js";
 
 //Import Services
 import NavigationService from "../services/NavigationService.js";
-import {getUserMediaList} from "../services/AniListQueryService.js";
+import {
+  getUserMediaList,
+  getViewerId
+} from "../services/AniListQueryService.js";
 
 export default class SettingsScreen extends React.Component {
   //Class Constructor
@@ -34,9 +37,14 @@ export default class SettingsScreen extends React.Component {
 
   updateUI = () => {
     this.setState({refreshing: true});
-    getUserMediaList(this.props.navigation.state.params.type).then(data => {
-      console.log(data);
-      this.setState({listData: data, isLoading: false, refreshing: false});
+    getViewerId().then(viewerId => {
+      console.log(viewerId);
+      getUserMediaList(
+        viewerId.data.Viewer.id,
+        this.props.navigation.state.params.type
+      ).then(data => {
+        this.setState({listData: data, isLoading: false, refreshing: false});
+      });
     });
   };
 
@@ -93,7 +101,7 @@ export default class SettingsScreen extends React.Component {
                           onPress={() =>
                             NavigationService.navigate("Details", {
                               itemId: media.mediaId,
-                              title: media.media.romaji,
+                              title: media.media.title.userPreferred,
                               type: media.media.type
                             })
                           }
@@ -109,7 +117,7 @@ export default class SettingsScreen extends React.Component {
                             }}
                           />
                           <Text style={{color: "white", marginLeft: 10}}>
-                            {media.media.title.romaji}
+                            {media.media.title.userPreferred}
                           </Text>
                         </TouchableOpacity>
                       );

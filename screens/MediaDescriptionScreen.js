@@ -19,7 +19,7 @@ import {createAppContainer} from "react-navigation";
 import {createStackNavigator} from "react-navigation-stack";
 import {LinearGradient} from "expo-linear-gradient";
 import NavigationService from "../services/NavigationService.js";
-import {getInfo, addEntryToList} from "../services/AniListQueryService.js";
+import {getMediaInfo, addEntryToList} from "../services/AniListQueryService.js";
 import RelatedHorizontalList from "../components/RelatedHorizontalList.js";
 import RecommendationHorizontalList from "../components/RecommendationHorizontalList.js";
 import MediaCharacterHorizontalList from "../components/MediaCharacterHorizontalList.js";
@@ -67,7 +67,7 @@ export default class DescriptionScreen extends React.Component {
   };
 
   componentDidMount() {
-    getInfo(
+    getMediaInfo(
       this.props.navigation.state.params.itemId,
       this.props.navigation.state.params.type
     ).then(data => {
@@ -102,14 +102,14 @@ export default class DescriptionScreen extends React.Component {
               source={{uri: data.coverImage.large}}
               style={styles.coverImg}
             />
-            <Text style={styles.title}>{data.title.romaji}</Text>
+            <Text style={styles.title}>{data.title.userPreferred}</Text>
             <RaisedTextButton
               title="Edit Title"
               onPress={() =>
                 NavigationService.navigate("EditEntry", {
                   mediaId: data.id,
                   image: data.coverImage.extraLarge,
-                  title: data.title.romaji,
+                  title: data.title.userPreferred,
                   type: data.type
                 })
               }

@@ -16,7 +16,7 @@ import {
 } from "react-native";
 import {LinearGradient} from "expo-linear-gradient";
 import Icon from "react-native-vector-icons/Ionicons";
-import {getEntryinfo} from "../services/AniListQueryService.js";
+import {getDiscoverInfo} from "../services/AniListQueryService.js";
 import ImageLoader from "../components/ImageLoader.js";
 
 //Import Services
@@ -37,16 +37,16 @@ export default class SettingsScreen extends React.Component {
 
   //Called After render(). Recalls render() when finished
   componentDidMount() {
-    getEntryinfo("ANIME", "POPULARITY_DESC").then(data =>
+    getDiscoverInfo("ANIME", "POPULARITY_DESC").then(data =>
       this.setState({isLoading: false, topanimedata: data})
     );
-    getEntryinfo("ANIME", "TRENDING_DESC").then(data =>
+    getDiscoverInfo("ANIME", "TRENDING_DESC").then(data =>
       this.setState({isLoading: false, trendinganimedata: data})
     );
-    getEntryinfo("MANGA", "POPULARITY_DESC").then(data =>
+    getDiscoverInfo("MANGA", "POPULARITY_DESC").then(data =>
       this.setState({isLoading: false, topmangadata: data})
     );
-    getEntryinfo("MANGA", "TRENDING_DESC").then(data =>
+    getDiscoverInfo("MANGA", "TRENDING_DESC").then(data =>
       this.setState({isLoading: false, trendingmangadata: data})
     );
   }
@@ -82,7 +82,7 @@ export default class SettingsScreen extends React.Component {
               onPress={() =>
                 NavigationService.navigate("Details", {
                   itemId: obj.id,
-                  title: obj.title.romaji,
+                  title: obj.title.userPreferred,
                   type: obj.type
                 })
               }
@@ -98,7 +98,7 @@ export default class SettingsScreen extends React.Component {
                   style={{alignSelf: "center", color: "white"}}
                   numberOfLines={2}
                 >
-                  {obj.title.romaji}
+                  {obj.title.userPreferred}
                 </Text>
               </View>
             </TouchableOpacity>

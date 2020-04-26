@@ -15,9 +15,9 @@ import {
 import {List, ListItem} from "react-native-elements";
 import Icon from "react-native-vector-icons/Ionicons";
 import {
-  searchMediaRecommendations,
-  searchStaffRecommendations,
-  searchCharacterRecommendations
+  searchMedia,
+  searchStaff,
+  searchCharacters
 } from "../services/AniListQueryService.js";
 
 import NavigationService from "../services/NavigationService.js";
@@ -50,23 +50,15 @@ export default class SettingsScreen extends React.Component {
       search: value.toString()
     });
     if (this.state.search.length >= 2) {
-      this.updateSearchRecommendations(value.toString());
+      this.updateSearches(value.toString());
     }
   }
 
-  updateSearchRecommendations(search) {
-    searchMediaRecommendations("ANIME", search).then(data =>
-      this.setState({animedata: data})
-    );
-    searchMediaRecommendations("MANGA", search).then(data =>
-      this.setState({mangadata: data})
-    );
-    searchStaffRecommendations(search).then(data =>
-      this.setState({staffdata: data})
-    );
-    searchCharacterRecommendations(search).then(data =>
-      this.setState({characterdata: data})
-    );
+  updateSearches(search) {
+    searchMedia("ANIME", search).then(data => this.setState({animedata: data}));
+    searchMedia("MANGA", search).then(data => this.setState({mangadata: data}));
+    searchStaff(search).then(data => this.setState({staffdata: data}));
+    searchCharacters(search).then(data => this.setState({characterdata: data}));
   }
 
   generateMediaList(title, data) {
@@ -102,18 +94,18 @@ export default class SettingsScreen extends React.Component {
                 onPress={() =>
                   NavigationService.navigate("Details", {
                     itemId: obj.id,
-                    title: obj.title.romaji,
+                    title: obj.title.userPreferred,
                     type: obj.type
                   })
                 }
               >
                 <View style={{flexDirection: "row"}}>
                   <Image
-                    source={{uri: obj.coverImage.large}}
+                    source={{uri: obj.coverImage.medium}}
                     style={styles.img}
                   />
                   <Text style={{color: "white", marginTop: 15, marginLeft: 15}}>
-                    {obj.title.romaji}
+                    {obj.title.userPreferred}
                   </Text>
                 </View>
               </TouchableOpacity>
@@ -212,7 +204,7 @@ export default class SettingsScreen extends React.Component {
                     >
                       <View style={{flexDirection: "row"}}>
                         <Image
-                          source={{uri: obj.image.large}}
+                          source={{uri: obj.image.medium}}
                           style={styles.img}
                         />
                         <Text
@@ -222,7 +214,7 @@ export default class SettingsScreen extends React.Component {
                             marginLeft: 15
                           }}
                         >
-                          {obj.name.last}, {obj.name.first}
+                          {obj.name.full}
                         </Text>
                       </View>
                     </TouchableOpacity>
@@ -267,7 +259,7 @@ export default class SettingsScreen extends React.Component {
                     >
                       <View style={{flexDirection: "row"}}>
                         <Image
-                          source={{uri: obj.image.large}}
+                          source={{uri: obj.image.medium}}
                           style={styles.img}
                         />
                         <Text
@@ -277,7 +269,7 @@ export default class SettingsScreen extends React.Component {
                             marginLeft: 15
                           }}
                         >
-                          {obj.name.last}, {obj.name.first}
+                          {obj.name.full}
                         </Text>
                       </View>
                     </TouchableOpacity>
