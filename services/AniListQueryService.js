@@ -704,62 +704,6 @@ export function getUserActivity(id) {
     });
 }
 
-<<<<<<< HEAD
-export function getThreads() {
-  return AsyncStorage.getItem("@AccessToken:key")
-    .then(accessToken => {
-      let query = `
-      query {
-        Page {
-          threads(sort: IS_STICKY) {
-            id
-            title
-            body (asHtml: false)
-            user {
-              name
-              avatar {
-                medium
-              }
-            }
-          }
-        }
-      }`;
-
-      let url = "https://graphql.anilist.co",
-        options = {
-          method: "POST",
-          headers: {
-            Authorization: "Bearer " + accessToken,
-            "Content-Type": "application/json",
-            Accept: "application/json"
-          },
-          body: JSON.stringify({
-            query: query
-          })
-        };
-      return fetch(url, options).then(response => {
-        return response.json().then(function(json) {
-          return response.ok ? json : Promise.reject(json);
-        });
-      });
-    })
-    .catch(error => {
-      return error;
-    });
-}
-
-export function getThreadComments(id, order = "ID") {
-  return AsyncStorage.getItem("@AccessToken:key")
-    .then(accessToken => {
-      let query = `
-      query {
-        Page {
-          threadComments (threadId: ${id}, sort: ${order}) {
-            id
-            comment (asHtml: false)
-          }
-        }
-      }`;
 export function getUserOptions(id) {
   return AsyncStorage.getItem("@AccessToken:key")
     .then(accessToken => {
@@ -797,7 +741,6 @@ export function getUserOptions(id) {
       }
     }
   }`;
->>>>>>> Profile
 
       let url = "https://graphql.anilist.co",
         options = {

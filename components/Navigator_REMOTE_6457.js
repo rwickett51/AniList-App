@@ -25,7 +25,6 @@ import DrawerScreen from "./Drawer.js";
 import HomeScreen from "../screens/HomeScreen.js";
 import ForumHomeScreen from "../screens/ForumHomeScreen.js";
 import ProfileScreen from "../screens/ProfileScreen.js";
-import ThreadScreen from "../screens/ThreadScreen.js";
 
 //Stack Navigators
 const Settings = createStackNavigator({
@@ -35,11 +34,8 @@ const Settings = createStackNavigator({
 });
 
 const Forum = createStackNavigator({
-  Home: {
+  Settings: {
     screen: ForumHomeScreen
-  },
-  Thread: {
-    screen: ThreadScreen
   }
 });
 
@@ -180,9 +176,6 @@ const MediaList = createStackNavigator({
   },
   Profile: {
     screen: ProfileScreen
-  },
-  Thread: {
-    screen: ThreadScreen
   }
 });
 

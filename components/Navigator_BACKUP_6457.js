@@ -25,7 +25,10 @@ import DrawerScreen from "./Drawer.js";
 import HomeScreen from "../screens/HomeScreen.js";
 import ForumHomeScreen from "../screens/ForumHomeScreen.js";
 import ProfileScreen from "../screens/ProfileScreen.js";
+<<<<<<< HEAD
 import ThreadScreen from "../screens/ThreadScreen.js";
+=======
+>>>>>>> Profile
 
 //Stack Navigators
 const Settings = createStackNavigator({
@@ -180,9 +183,12 @@ const MediaList = createStackNavigator({
   },
   Profile: {
     screen: ProfileScreen
+<<<<<<< HEAD
   },
   Thread: {
     screen: ThreadScreen
+=======
+>>>>>>> Profile
   }
 });
 
@@ -253,7 +259,7 @@ const TabStack = createMaterialBottomTabNavigator(
     }
   },
   {
-    initialRouteName: "Home",
+    initialRouteName: "Forum",
     barStyle: {backgroundColor: "#2A2A2A"},
     activeColor: "cyan",
     inactiveColor: "white"
