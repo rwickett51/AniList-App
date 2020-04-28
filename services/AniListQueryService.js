@@ -1,5 +1,5 @@
 import React from "react";
-import {AsyncStorage, Alert} from "react-native";
+import {AsyncStorage} from "react-native";
 import {showMessage, hideMessage} from "react-native-flash-message";
 
 export function getMediaInfo(id, mediaType) {
@@ -387,8 +387,10 @@ export function getCharacterInfo(characterId) {
   let query = `
     query ($characterId: Int) {
       Character(id: $characterId) {
+        id
         description(asHtml: false)
         isFavourite
+        favourites
         image {
           large
         }
@@ -402,7 +404,11 @@ export function getCharacterInfo(characterId) {
             characterRole
             voiceActors {
               id
-              name
+              name {
+                full
+                native
+                alternative
+              }
               language
               image {
                 medium
@@ -687,6 +693,48 @@ export function getThreadComments(threadId, order) {
   });
 }
 
+export function toggleLike(variables) {
+  let query = `
+    mutation($animeId: Int, $mangaId: Int, $characterId: Int, $staffId: Int, $studioId: Int,) {
+      ToggleFavourite(animeId: $animeId, mangaId: $mangaId, characterId: $characterId, staffId: $staffId, studioId: $studioId) {
+        anime {
+          nodes {
+            id
+          }
+        }
+        manga {
+          nodes {
+            id
+          }
+        }
+        characters {
+          nodes {
+            id
+          }
+        }
+        staff {
+          nodes {
+            id
+          }
+        }
+        studios {
+          nodes {
+            id
+          }
+        }
+      }
+    }
+    `;
+
+  return AsyncStorage.getItem("@AccessToken:key").then(accessToken => {
+    if (accessToken !== null) {
+      return authorizedRequest(query, variables, accessToken);
+    } else {
+      return unauthorizedRequest(query, variables);
+    }
+  });
+}
+
 function unauthorizedRequest(query, variables) {
   var url = "https://graphql.anilist.co",
     options = {
@@ -701,11 +749,15 @@ function unauthorizedRequest(query, variables) {
       })
     };
 
-  return fetch(url, options).then(response => {
-    return response.json().then(function(json) {
-      return response.ok ? json : Promise.reject(json);
+  return fetch(url, options)
+    .then(response => {
+      return response.json().then(function(json) {
+        return response.ok ? json : Promise.reject(json);
+      });
+    })
+    .catch(error => {
+      return error;
     });
-  });
 }
 
 function authorizedRequest(query, variables, accessToken) {
@@ -722,9 +774,13 @@ function authorizedRequest(query, variables, accessToken) {
         variables: variables
       })
     };
-  return fetch(url, options).then(response => {
-    return response.json().then(function(json) {
-      return response.ok ? json : Promise.reject(json);
+  return fetch(url, options)
+    .then(response => {
+      return response.json().then(function(json) {
+        return response.ok ? json : Promise.reject(json);
+      });
+    })
+    .catch(error => {
+      return error;
     });
-  });
 }

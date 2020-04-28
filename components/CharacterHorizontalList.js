@@ -55,7 +55,7 @@ export default class MediaHorizontalList extends React.Component {
                     }}
                     numberOfLines={2}
                   >
-                    {obj.node.title.romaji}
+                    {obj.node.title.userPreferred}
                   </Text>
                 </TouchableOpacity>
               </View>

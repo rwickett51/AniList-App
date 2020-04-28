@@ -37,7 +37,6 @@ export default class DrawerScreen extends React.Component {
   getBasicUserURL() {
     return getViewerId().then(viewerId => {
       getBasicUserInfo(viewerId.data.Viewer.id).then(data => {
-        console.log(data);
         this.setState({
           URL: data.data.User.avatar.large,
           name: data.data.User.name
