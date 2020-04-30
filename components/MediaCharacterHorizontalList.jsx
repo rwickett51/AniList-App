@@ -8,7 +8,7 @@ import {
   Image,
   TouchableOpacity
 } from "react-native";
-import NavigationService from "../services/NavigationService";
+import * as NavigationService from "../services/NavigationService";
 import ImageLoader from "../components/ImageLoader";
 
 export default class MediaCharacterHorizontalList extends React.Component {
@@ -30,13 +30,13 @@ export default class MediaCharacterHorizontalList extends React.Component {
                 <TouchableOpacity
                   activeOpacity={0.5}
                   onPress={() =>
-                    NavigationService.navigate(
-                      "Character",
-                      {
-                        id: obj.node.id
-                      },
-                      obj.id
-                    )
+                    NavigationService.navigate({
+                      name: "Character",
+                      key: obj.node.id,
+                      params: {
+                        characterId: obj.node.id
+                      }
+                    })
                   }
                 >
                   <ImageLoader

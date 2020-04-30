@@ -20,7 +20,7 @@ import {
   searchCharacters
 } from "../services/AniListQueryService";
 
-import NavigationService from "../services/NavigationService";
+import * as NavigationService from "../services/NavigationService";
 
 export default class SettingsScreen extends React.Component {
   //Class Constructor
@@ -92,10 +92,13 @@ export default class SettingsScreen extends React.Component {
                 key={obj.id}
                 activeOpacity={0.5}
                 onPress={() =>
-                  NavigationService.navigate("Details", {
-                    itemId: obj.id,
-                    title: obj.title.userPreferred,
-                    type: obj.type
+                  NavigationService.navigate({
+                    name: "Media",
+                    mediaId: obj.id,
+                    params: {
+                      mediaId: obj.id,
+                      mediaType: obj.type
+                    }
                   })
                 }
               >
@@ -199,7 +202,10 @@ export default class SettingsScreen extends React.Component {
                       key={obj.id}
                       activeOpacity={0.5}
                       onPress={() =>
-                        NavigationService.navigate("Staff", {id: obj.id})
+                        NavigationService.navigate({
+                          name: "Staff",
+                          params: {staffId: obj.id}
+                        })
                       }
                     >
                       <View style={{flexDirection: "row"}}>
@@ -254,7 +260,11 @@ export default class SettingsScreen extends React.Component {
                       key={obj.id}
                       activeOpacity={0.5}
                       onPress={() =>
-                        NavigationService.navigate("Character", {id: obj.id})
+                        NavigationService.navigate({
+                          name: "Character",
+                          key: obj.id,
+                          params: {characterId: obj.id}
+                        })
                       }
                     >
                       <View style={{flexDirection: "row"}}>

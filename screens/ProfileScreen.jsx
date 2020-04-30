@@ -7,7 +7,6 @@ import Icon from "react-native-vector-icons/Ionicons";
 
 //Services
 import {getBasicUserInfo} from "../services/AniListQueryService";
-import NavigationService from "../services/NavigationService";
 
 export default class ProfileScreen extends React.Component {
   //Class Constructor

@@ -8,7 +8,7 @@ import {
   Image,
   TouchableOpacity
 } from "react-native";
-import NavigationService from "../services/NavigationService";
+import * as NavigationService from "../services/NavigationService";
 import ImageLoader from "../components/ImageLoader";
 
 export default class RecommendationHorizontalList extends React.Component {
@@ -30,15 +30,14 @@ export default class RecommendationHorizontalList extends React.Component {
                 <TouchableOpacity
                   activeOpacity={0.5}
                   onPress={() =>
-                    NavigationService.navigate(
-                      "Details",
-                      {
-                        itemId: obj.node.mediaRecommendation.id,
-                        title: obj.node.mediaRecommendation.title.romaji,
-                        type: obj.node.mediaRecommendation.type
-                      },
-                      obj.node.id
-                    )
+                    NavigationService.navigate({
+                      name: "Media",
+                      key: obj.node.mediaRecommendation.id,
+                      params: {
+                        mediaId: obj.node.mediaRecommendation.id,
+                        mediaType: obj.node.mediaRecommendation.type
+                      }
+                    })
                   }
                 >
                   <ImageLoader

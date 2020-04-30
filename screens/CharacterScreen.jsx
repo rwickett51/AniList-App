@@ -27,7 +27,6 @@ import CharacterVoiceActorHorizontalList from "../components/CharacterVoiceActor
 import defaultStyles from "../constants/MarkdownStyles";
 
 //Import Services
-import NavigationService from "../services/NavigationService";
 import {getCharacterInfo, toggleLike} from "../services/AniListQueryService";
 
 export default class CharacterScreen extends React.Component {
@@ -47,7 +46,7 @@ export default class CharacterScreen extends React.Component {
   }
 
   async getData(mediaType, sortType) {
-    return getCharacterInfo(this.props.navigation.state.params.id).then(
+    return getCharacterInfo(this.props.route.params?.characterId ?? 36309).then(
       data => {
         if (data.data == null) {
           showMessage({

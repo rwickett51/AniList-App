@@ -15,6 +15,7 @@ import ActivityItem from "../components/ActivityItem";
 
 //Import Services
 import {getUserActivity} from "../services/AniListQueryService";
+import * as NavigationService from "../services/NavigationService";
 
 export default class HomeScreen extends React.Component {
   //Class Constructor
@@ -58,7 +59,6 @@ export default class HomeScreen extends React.Component {
     if (this.state.isLoading) {
       return <ActivityIndicator />;
     } else {
-      console.log(this.state.data);
       return (
         <ScrollView style={{flex: 1}}>
           {this.state.data.data.Page.ListFields.map(obj => {

@@ -17,7 +17,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import ImageLoader from "../components/ImageLoader";
 
 //Import Services
-import NavigationService from "../services/NavigationService";
+import * as NavigationService from "../services/NavigationService";
 import {getUserMediaList, getViewerId} from "../services/AniListQueryService";
 
 export default class SettingsScreen extends React.Component {
@@ -75,6 +75,7 @@ export default class SettingsScreen extends React.Component {
             bottom: 0,
             flex: 1
           }}
+          source={{uri: this.props.route.params?.image}}
           blurRadius={15}
         >
           <ScrollView style={{backgroundColor: "rgba(0,0,0, 0.07)"}}>
@@ -96,10 +97,13 @@ export default class SettingsScreen extends React.Component {
                           key={obj.id}
                           activeOpacity={0.5}
                           onPress={() =>
-                            NavigationService.navigate("Details", {
-                              itemId: media.mediaId,
-                              title: media.media.title.userPreferred,
-                              type: media.media.type
+                            NavigationService.navigate({
+                              name: "Media",
+                              params: {
+                                itemId: media.mediaId,
+                                title: media.media.title.userPreferred,
+                                type: media.media.type
+                              }
                             })
                           }
                           style={{flexDirection: "row"}}

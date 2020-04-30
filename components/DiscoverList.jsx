@@ -14,7 +14,7 @@ import {
 import ImageLoader from "../components/ImageLoader";
 
 //Import Services
-import NavigationService from "../services/NavigationService";
+import * as NavigationService from "../services/NavigationService";
 
 export default class DiscoverList extends React.Component {
   //Render Components to screen
@@ -32,15 +32,14 @@ export default class DiscoverList extends React.Component {
               key={media.id}
               activeOpacity={0.7}
               onPress={() =>
-                NavigationService.navigate(
-                  "Details",
-                  {
-                    itemId: media.id,
-                    title: media.title.userPreferred,
-                    type: media.type
-                  },
-                  media.id
-                )
+                NavigationService.navigate({
+                  name: "Media",
+                  key: media.id,
+                  params: {
+                    mediaId: media.id,
+                    mediaType: media.type
+                  }
+                })
               }
             >
               <View style={styles.MediaContainer}>

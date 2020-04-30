@@ -19,19 +19,17 @@ import Autolink from "react-native-autolink";
 import defaultStyles from "../constants/MarkdownStyles";
 
 //Import Services
-import NavigationService from "../services/NavigationService";
 import {getThreadComments} from "../services/AniListQueryService";
 
 export default class ThreadScreen extends React.Component {
   //Class Constructor
   constructor(props) {
     super(props);
-    this.state = {data: null, isLoading: true, order: "ID"};
+    this.state = {data: null, isLoading: true, order: "ID_DESC"};
   }
 
   //Called After render(). Recalls render() when finished
   componentDidMount() {
-    NavigationService.setParams({getComments: this.getComments});
     this.getComments();
   }
 
@@ -44,24 +42,18 @@ export default class ThreadScreen extends React.Component {
       this.setState({order: "ID"});
       order = "ID";
     }
-    getThreadComments(this.props.navigation.state.params.id, order).then(
-      data => {
-        console.log(data);
-        if (
-          data.data === null ||
-          data.data.Page === null ||
-          data == undefined
-        ) {
-          showMessage({
-            icon: "auto",
-            message: "Something went wrong",
-            type: "danger"
-          });
-        } else {
-          this.setState({isLoading: false, data: data});
-        }
+    getThreadComments(this.props.route.params?.threadId, order).then(data => {
+      console.log(data);
+      if (data.data === null || data.data.Page === null || data == undefined) {
+        showMessage({
+          icon: "auto",
+          message: "Something went wrong",
+          type: "danger"
+        });
+      } else {
+        this.setState({isLoading: false, data: data});
       }
-    );
+    });
   }
 
   //Header Options
@@ -86,13 +78,10 @@ export default class ThreadScreen extends React.Component {
           <View style={styles.ThreadContainer}>
             <View>
               <Markdown markdownStyles={defaultStyles}>
-                {this.props.navigation.state.params.op.title}
+                {this.props.route.params?.op.title}
               </Markdown>
               <Markdown markdownStyles={defaultStyles}>
-                {this.props.navigation.state.params.op.body.replace(
-                  /(<([^>]+)>)/gi,
-                  ""
-                )}
+                {this.props.route.params?.op.body.replace(/(<([^>]+)>)/gi, "")}
               </Markdown>
             </View>
           </View>

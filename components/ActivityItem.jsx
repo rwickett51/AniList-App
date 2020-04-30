@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   TouchableHighlight
 } from "react-native";
-import NavigationService from "../services/NavigationService";
+import * as NavigationService from "../services/NavigationService";
 import ImageLoader from "../components/ImageLoader";
 
 export default class ActivityItem extends React.Component {
@@ -18,12 +18,14 @@ export default class ActivityItem extends React.Component {
     return (
       <TouchableHighlight
         onPress={() => {
-          NavigationService.navigate("Details", {
-            itemId: obj.media.id,
-            title: obj.media.title.romaji,
-            type: obj.media.type
+          NavigationService.navigate({
+            name: "Media",
+            key: obj.media.id,
+            params: {
+              mediaId: obj.media.id,
+              mediaType: obj.media.type
+            }
           });
-          obj.media.id;
         }}
         key={obj.id}
       >

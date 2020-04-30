@@ -29,14 +29,15 @@ import KeyboardDismiss from "../components/KeyboardDismiss";
 import {showMessage, hideMessage} from "react-native-flash-message";
 
 //Import Services
-import NavigationService from "../services/NavigationService";
+import * as NavigationService from "../services/NavigationService";
 import {
+  getViewerId,
   getUserEntryData,
   addEntryToList,
   deleteEntryFromList
 } from "../services/AniListQueryService";
 
-export default class SettingsScreen extends React.Component {
+export default class EditEntryScreen extends React.Component {
   //Class Constructor
   constructor(props) {
     super(props);
@@ -59,55 +60,57 @@ export default class SettingsScreen extends React.Component {
 
   //Called After render(). Recalls render() when finished
   componentDidMount() {
-    getUserEntryData(
-      this.props.navigation.state.params.mediaId,
-      this.state.status
-    ).then(data => {
-      console.log(data);
-      if (data.data.MediaList != null)
-        if (data.data.MediaList.startedAt.year == null) {
-          this.setState({
-            data: data,
-            isLoading: false,
-            status: data.data.MediaList.status,
-            score: data.data.MediaList.score,
-            progress: data.data.MediaList.progress.toString(),
-            notes:
-              data.data.MediaList.notes == "null" ||
-              data.data.MediaList.notes == null
-                ? ""
-                : data.data.MediaList.notes
-          });
-        } else {
-          this.setState({
-            data: data,
-            isLoading: false,
-            status: data.data.MediaList.status,
-            score: data.data.MediaList.score,
-            progress: data.data.MediaList.progress.toString(),
-            startday: data.data.MediaList.startedAt.day.toString(),
-            startmonth: data.data.MediaList.startedAt.month.toString(),
-            startyear: data.data.MediaList.startedAt.year.toString(),
-            finishday:
-              data.data.MediaList.completedAt.day == null
-                ? null
-                : data.data.MediaList.completedAt.day.toString(),
-            finishmonth:
-              data.data.MediaList.completedAt.month == null
-                ? null
-                : data.data.MediaList.completedAt.month.toString(),
-            finishyear:
-              data.data.MediaList.completedAt.year == null
-                ? null
-                : data.data.MediaList.completedAt.year.toString(),
-            notes:
-              data.data.MediaList.notes == "null" ||
-              data.data.MediaList.notes == null
-                ? ""
-                : data.data.MediaList.notes
-          });
-        }
-      else this.setState({isLoading: false});
+    getViewerId().then(viewerId => {
+      getUserEntryData(
+        viewerId.data.Viewer.id,
+        this.props.route.params?.mediaId
+      ).then(data => {
+        console.log(data);
+        if (data.data.MediaList != null)
+          if (data.data.MediaList.startedAt.year == null) {
+            this.setState({
+              data: data,
+              isLoading: false,
+              status: data.data.MediaList.status,
+              score: data.data.MediaList.score,
+              progress: data.data.MediaList.progress.toString(),
+              notes:
+                data.data.MediaList.notes == "null" ||
+                data.data.MediaList.notes == null
+                  ? ""
+                  : data.data.MediaList.notes
+            });
+          } else {
+            this.setState({
+              data: data,
+              isLoading: false,
+              status: data.data.MediaList.status,
+              score: data.data.MediaList.score,
+              progress: data.data.MediaList.progress.toString(),
+              startday: data.data.MediaList.startedAt.day.toString(),
+              startmonth: data.data.MediaList.startedAt.month.toString(),
+              startyear: data.data.MediaList.startedAt.year.toString(),
+              finishday:
+                data.data.MediaList.completedAt.day == null
+                  ? null
+                  : data.data.MediaList.completedAt.day.toString(),
+              finishmonth:
+                data.data.MediaList.completedAt.month == null
+                  ? null
+                  : data.data.MediaList.completedAt.month.toString(),
+              finishyear:
+                data.data.MediaList.completedAt.year == null
+                  ? null
+                  : data.data.MediaList.completedAt.year.toString(),
+              notes:
+                data.data.MediaList.notes == "null" ||
+                data.data.MediaList.notes == null
+                  ? ""
+                  : data.data.MediaList.notes
+            });
+          }
+        else this.setState({isLoading: false});
+      });
     });
   }
 
@@ -132,7 +135,7 @@ export default class SettingsScreen extends React.Component {
         >
           <ImageBackground
             source={{
-              uri: this.props.navigation.state.params.image
+              uri: this.props.route.params?.image
             }}
             style={{
               left: 0,
@@ -522,7 +525,7 @@ export default class SettingsScreen extends React.Component {
                       if (data != undefined)
                         showMessage({
                           icon: "auto",
-                          message: `${this.props.navigation.state.params.title} list entry updated`,
+                          message: `${this.props.route.params?.title} list entry updated`,
                           type: "success"
                         });
                       else

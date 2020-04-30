@@ -7,7 +7,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import {WebView} from "react-native-webview";
 
 //Services
-import NavigationService from "../services/NavigationService";
+import * as NavigationService from "../services/NavigationService";
 
 export default class SettingsScreen extends React.Component {
   //Class Constructor

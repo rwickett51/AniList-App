@@ -15,7 +15,7 @@ import {
 import AutoHeightImage from "react-native-auto-height-image";
 
 //Import Services
-import NavigationService from "../services/NavigationService";
+import * as NavigationService from "../services/NavigationService";
 
 export default class MediaHorizontalList extends React.Component {
   render() {
@@ -37,15 +37,14 @@ export default class MediaHorizontalList extends React.Component {
                 <TouchableOpacity
                   activeOpacity={0.5}
                   onPress={() =>
-                    NavigationService.navigate(
-                      "Details",
-                      {
-                        itemId: obj.node.id,
-                        title: obj.node.title.userPreferred,
-                        type: obj.node.type
-                      },
-                      obj.node.id
-                    )
+                    NavigationService.navigate({
+                      name: "Media",
+                      key: obj.node.id,
+                      params: {
+                        mediaId: obj.node.id,
+                        mediaType: obj.node.type
+                      }
+                    })
                   }
                 >
                   <View>

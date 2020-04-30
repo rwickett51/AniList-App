@@ -14,11 +14,8 @@ import {
 import {createDrawerNavigator, DrawerItems} from "react-navigation-drawer";
 
 //Services
-import {
-  getBasicUserInfo,
-  getViewerId
-} from "../services/AniListQueryService";
-import NavigationService from "../services/NavigationService";
+import {getBasicUserInfo, getViewerId} from "../services/AniListQueryService";
+import * as NavigationService from "../services/NavigationService";
 
 export default class DrawerScreen extends React.Component {
   constructor(props) {

@@ -17,7 +17,7 @@ import Markdown from "react-native-easy-markdown";
 import defaultStyles from "../constants/MarkdownStyles";
 
 //Import Services
-import NavigationService from "../services/NavigationService";
+import * as NavigationService from "../services/NavigationService";
 import {getThreads} from "../services/AniListQueryService";
 
 export default class ForumHomeScreen extends React.Component {
@@ -73,14 +73,14 @@ export default class ForumHomeScreen extends React.Component {
                 <TouchableHighlight
                   style={styles.ThreadContainer}
                   onPress={() => {
-                    NavigationService.navigate(
-                      "Thread",
-                      {
-                        id: obj.id,
+                    NavigationService.navigate({
+                      name: "Thread",
+                      key: obj.id,
+                      params: {
+                        threadId: obj.id,
                         op: obj
-                      },
-                      obj.id
-                    );
+                      }
+                    });
                   }}
                   key={obj.id}
                 >

@@ -20,7 +20,6 @@ import DiscoverList from "../components/DiscoverList";
 import {showMessage, hideMessage} from "react-native-flash-message";
 
 //Import Services
-import NavigationService from "../services/NavigationService";
 import {getDiscoverInfo} from "../services/AniListQueryService";
 
 export default class DiscoverScreen extends React.Component {
@@ -87,13 +86,6 @@ export default class DiscoverScreen extends React.Component {
           name="ios-menu"
           onPress={() => navigation.openDrawer()}
           style={{color: "white", fontSize: 30, marginLeft: 10, marginTop: 5}}
-        />
-      ),
-      headerRight: () => (
-        <Icon
-          name="ios-search"
-          onPress={() => NavigationService.navigate("Search")}
-          style={{color: "white", fontSize: 30, marginRight: 10, marginTop: 5}}
         />
       )
     };

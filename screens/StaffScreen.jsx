@@ -27,7 +27,6 @@ import StaffCharacterHorizontalList from "../components/StaffCharacterHorizontal
 import defaultStyles from "../constants/MarkdownStyles";
 
 //Import Services
-import NavigationService from "../services/NavigationService";
 import {getStaffInfo} from "../services/AniListQueryService";
 
 export default class StaffScreen extends React.Component {
@@ -47,7 +46,7 @@ export default class StaffScreen extends React.Component {
   }
 
   async getData(mediaType, sortType) {
-    return getStaffInfo(this.props.navigation.state.params.id).then(data => {
+    return getStaffInfo(this.props.route.params?.staffId).then(data => {
       if (data.data == null) {
         showMessage({
           icon: "auto",

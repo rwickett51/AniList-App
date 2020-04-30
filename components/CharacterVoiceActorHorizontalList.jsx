@@ -16,7 +16,7 @@ import ImageLoader from "../components/ImageLoader";
 import AutoscaleImageLoader from "./AutoscaleImageLoader";
 
 //Import Services
-import NavigationService from "../services/NavigationService";
+import * as NavigationService from "../services/NavigationService";
 
 export default class MediaHorizontalList extends React.Component {
   render() {
@@ -47,7 +47,11 @@ export default class MediaHorizontalList extends React.Component {
               <TouchableOpacity
                 style={styles.Container}
                 onPress={() => {
-                  NavigationService.navigate("Staff", {id: voiceActor.id});
+                  NavigationService.navigate({
+                    name: "Staff",
+                    key: voiceActor.id,
+                    params: {staffId: voiceActor.id}
+                  });
                 }}
               >
                 <View>
