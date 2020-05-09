@@ -10,22 +10,21 @@ import {
   StyleSheet,
   ActivityIndicator,
   TouchableHighlight,
-  Linking
+  Linking,
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
-import {showMessage, hideMessage} from "react-native-flash-message";
+import { showMessage, hideMessage } from "react-native-flash-message";
 import Markdown from "react-native-easy-markdown";
-import Autolink from "react-native-autolink";
 import defaultStyles from "../constants/MarkdownStyles";
 
 //Import Services
-import {getThreadComments} from "../services/AniListQueryService";
+import { getThreadComments } from "../services/AniListQueryService";
 
 export default class ThreadScreen extends React.Component {
   //Class Constructor
   constructor(props) {
     super(props);
-    this.state = {data: null, isLoading: true, order: "ID_DESC"};
+    this.state = { data: null, isLoading: true, order: "ID_DESC" };
   }
 
   //Called After render(). Recalls render() when finished
@@ -35,32 +34,33 @@ export default class ThreadScreen extends React.Component {
 
   getComments() {
     let order = this.state.order;
+    /*
     if (order == "ID") {
       this.setState({order: "ID_DESC"});
       order = "ID_DESC";
     } else {
       this.setState({order: "ID"});
       order = "ID";
-    }
-    getThreadComments(this.props.route.params?.threadId, order).then(data => {
+    }*/
+    getThreadComments(this.props.route.params?.threadId, order).then((data) => {
       console.log(data);
       if (data.data === null || data.data.Page === null || data == undefined) {
         showMessage({
           icon: "auto",
           message: "Something went wrong",
-          type: "danger"
+          type: "danger",
         });
       } else {
-        this.setState({isLoading: false, data: data});
+        this.setState({ isLoading: false, data: data });
       }
     });
   }
 
   //Header Options
-  static navigationOptions = ({navigation}) => {
-    const {params = {}} = navigation.state;
+  static navigationOptions = ({ navigation }) => {
+    const { params = {} } = navigation.state;
     return {
-      title: "Thread"
+      title: "Thread",
     };
   };
 
@@ -68,13 +68,13 @@ export default class ThreadScreen extends React.Component {
   render() {
     if (this.state.isLoading) {
       return (
-        <View style={{flex: 1, justifyContent: "center"}}>
+        <View style={{ flex: 1, justifyContent: "center" }}>
           <ActivityIndicator />
         </View>
       );
     } else {
       return (
-        <ScrollView style={{flex: 1}}>
+        <ScrollView style={{ flex: 1 }}>
           <View style={styles.ThreadContainer}>
             <View>
               <Markdown markdownStyles={defaultStyles}>
@@ -109,14 +109,14 @@ var styles = StyleSheet.create({
     marginBottom: 25,
     alignSelf: "center",
     borderRadius: 0,
-    padding: 15
+    padding: 15,
   },
   ThreadTitle: {
     color: "white",
     fontSize: 22,
-    paddingBottom: 10
+    paddingBottom: 10,
   },
   ThreadBody: {
-    color: "white"
-  }
+    color: "white",
+  },
 });

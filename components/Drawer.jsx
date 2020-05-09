@@ -11,7 +11,6 @@ import {
   TouchableOpacity,
   TouchableHighlight
 } from "react-native";
-import {createDrawerNavigator, DrawerItems} from "react-navigation-drawer";
 
 //Services
 import {getBasicUserInfo, getViewerId} from "../services/AniListQueryService";
@@ -68,7 +67,9 @@ export default class DrawerScreen extends React.Component {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.DrawerItemContainer}
-            onPress={() => {}}
+            onPress={() => {
+              NavigationService.navigate("Notifications");
+            }}
           >
             <Text style={styles.DrawerItem}>Notifications</Text>
           </TouchableOpacity>

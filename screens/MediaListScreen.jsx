@@ -20,48 +20,84 @@ import ImageLoader from "../components/ImageLoader";
 import * as NavigationService from "../services/NavigationService";
 import {getUserMediaList, getViewerId} from "../services/AniListQueryService";
 
-export default class SettingsScreen extends React.Component {
+function mapOrder(array, order, key) {
+  array.sort((a, b) => {
+    var A = a[key],
+      B = b[key];
+
+    if (order.indexOf(A) > order.indexOf(B)) {
+      return 1;
+    } else {
+      return -1;
+    }
+  });
+
+  return array;
+}
+
+export default class MediaListScreen extends React.Component {
   //Class Constructor
   constructor(props) {
     super(props);
-    this.state = {listData: null, isLoading: true, refreshing: false};
+    this.name = this.props.route.name;
+    console.log(this.props.route.name);
+    this.state = {
+      isLoading: true
+    };
   }
+
+  async getData(viewerId, mediaType) {
+    return getUserMediaList(viewerId, mediaType).then(data => {
+      if (data.data == null) {
+        showMessage({
+          icon: "auto",
+          message: `Something went wrong`,
+          type: "warning"
+        });
+        return null;
+      }
+      return data;
+    });
+  }
+
+  updateUI = () => {
+    this.setState({isLoading: true});
+    getViewerId().then(viewerId => {
+      this.getData(viewerId.data.Viewer.id, this.name).then(data => {
+        let Order = [
+          this.name == "ANIME" ? "Watching" : "Reading",
+          "Completed",
+          "Paused",
+          "Dropped",
+          "Planning"
+        ];
+        data.data.MediaListCollection.lists = mapOrder(
+          data.data.MediaListCollection.lists,
+          Order,
+          "name"
+        );
+        data.data.MediaListCollection.lists.forEach(list => {
+          list.entries.sort((a, b) => {
+            return a.media.title.userPreferred > b.media.title.userPreferred
+              ? 1
+              : -1;
+          });
+        });
+        this.setState({data: data, isLoading: false});
+      });
+    });
+  };
 
   //Called After render(). Recalls render() when finished
   componentDidMount() {
     this.updateUI();
   }
 
-  updateUI = () => {
-    this.setState({refreshing: true});
-    getViewerId().then(viewerId => {
-      console.log(viewerId);
-      getUserMediaList(
-        viewerId.data.Viewer.id,
-        this.props.navigation.state.params.type
-      ).then(data => {
-        this.setState({listData: data, isLoading: false, refreshing: false});
-      });
-    });
-  };
-
-  //Header Options
-  static navigationOptions = ({navigation}) => {
-    return {
-      title: navigation.state.params.type,
-      tabBarOptions: {
-        style: {
-          backgroundColor: "#2A2A2A"
-        }
-      }
-    };
-  };
-
   //Render Components to screen
   render() {
     if (this.state.isLoading) {
       return (
-        <View>
+        <View style={{flex: 1, justifyContent: "center"}}>
           <ActivityIndicator />
         </View>
       );
@@ -82,9 +118,9 @@ export default class SettingsScreen extends React.Component {
             <RefreshControl
               onRefresh={() => this.updateUI()}
               colors="white"
-              refreshing={this.state.refreshing}
+              isLoading={this.state.isLoading}
             />
-            {this.state.listData.data.MediaListCollection.lists.map(obj => {
+            {this.state.data.data.MediaListCollection.lists.map(obj => {
               return (
                 <View>
                   <Text style={{color: "white", fontSize: 25, margin: 30}}>
@@ -100,9 +136,8 @@ export default class SettingsScreen extends React.Component {
                             NavigationService.navigate({
                               name: "Media",
                               params: {
-                                itemId: media.mediaId,
-                                title: media.media.title.userPreferred,
-                                type: media.media.type
+                                mediaId: media.mediaId,
+                                mediaType: media.media.type
                               }
                             })
                           }

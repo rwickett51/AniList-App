@@ -115,7 +115,7 @@ export default class StaffScreen extends React.Component {
             }}
           />
           <ScrollView
-            scrollEventThrottle={200}
+            scrollEventThrottle={32}
             style={StyleSheet.absoluteFill}
             onScroll={Animated.event([
               {nativeEvent: {contentOffset: {y: this.scrollY}}}

@@ -12,7 +12,6 @@ import {
   Image,
   TouchableOpacity
 } from "react-native";
-import {List, ListItem} from "react-native-elements";
 import Icon from "react-native-vector-icons/Ionicons";
 import {
   searchMedia,

@@ -45,7 +45,7 @@ export default class CharacterScreen extends React.Component {
     };
   }
 
-  async getData(mediaType, sortType) {
+  async getData() {
     return getCharacterInfo(this.props.route.params?.characterId ?? 36309).then(
       data => {
         if (data.data == null) {
@@ -74,22 +74,6 @@ export default class CharacterScreen extends React.Component {
     });
   }
 
-  //Header Options
-  static navigationOptions = ({navigation}) => {
-    return {
-      title: "",
-      headerTransparent: true,
-      headerBackground: () => (
-        <LinearGradient
-          colors={["black", "transparent"]}
-          style={{flex: 1}}
-          start={{x: 0, y: 0.25}}
-          end={{x: 0, y: 1}}
-        />
-      )
-    };
-  };
-
   //Custom Functions
 
   //Render Components to screen
@@ -116,7 +100,7 @@ export default class CharacterScreen extends React.Component {
             }}
           />
           <ScrollView
-            scrollEventThrottle={200}
+            scrollEventThrottle={32}
             style={StyleSheet.absoluteFill}
             onScroll={Animated.event([
               {nativeEvent: {contentOffset: {y: this.scrollY}}}

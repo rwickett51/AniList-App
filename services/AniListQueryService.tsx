@@ -1,16 +1,61 @@
-import React from "react";
-import {AsyncStorage} from "react-native";
-import {showMessage, hideMessage} from "react-native-flash-message";
+import { AsyncStorage } from "react-native";
 
-export function getMediaInfo(id, mediaType) {
+//Primitive Types
+interface MediaListStatus {
+  value:
+    | "CURRENT"
+    | "PLANNING"
+    | "COMPLETED"
+    | "DROPPED"
+    | "DROPPED"
+    | "PAUSED"
+    | "REPEATING";
+}
+
+interface FuzzyDateInput {
+  day: number;
+  month: number;
+  year: number;
+}
+
+interface LikeData {
+  animeId?: number;
+  mangaId?: number;
+  characterId?: number;
+  staffId?: number;
+  studioId?: number;
+}
+
+interface EditData {
+  mediaId?: number;
+  status?: MediaListStatus;
+  score?: number;
+  progress?: number;
+  startDate?: FuzzyDateInput;
+  completeDate?: FuzzyDateInput;
+  notes?: string;
+}
+
+interface ThreadOrder {
+  order: "ID" | "ID_DESC";
+}
+
+interface MediaType {
+  type: "ANIME" | "MANGA";
+}
+
+export async function getMediaInfo(mediaId: number, mediaType: MediaType) {
   var query = `
     query ($id: Int, $mediaType: MediaType) {
       Media(id: $id, type: $mediaType) {
         id
+        isFavourite
+        favourites
         bannerImage
         coverImage {
           large
           extraLarge
+          color
         }
         title {
           userPreferred
@@ -86,20 +131,19 @@ export function getMediaInfo(id, mediaType) {
     `;
 
   var variables = {
-    id: id,
-    mediaType: mediaType
+    id: mediaId,
+    mediaType: mediaType,
   };
 
-  return AsyncStorage.getItem("@AccessToken:key").then(accessToken => {
-    if (accessToken !== null) {
-      return authorizedRequest(query, variables, accessToken);
-    } else {
-      return unauthorizedRequest(query, variables);
-    }
-  });
+  const accessToken = await AsyncStorage.getItem("@AccessToken:key");
+  if (accessToken !== null) {
+    return authorizedRequest(query, variables, accessToken);
+  } else {
+    return unauthorizedRequest(query, variables);
+  }
 }
 
-export function getDiscoverInfo(mediaType, sortType) {
+export async function getDiscoverInfo(mediaType: MediaType, sortType: String) {
   let query = `
     query ($mediaType: MediaType, $sortType: [MediaSort], $perPage: Int) {
       Page(perPage: $perPage) {
@@ -119,19 +163,18 @@ export function getDiscoverInfo(mediaType, sortType) {
 
   let variables = {
     mediaType: mediaType,
-    sortType: sortType
+    sortType: sortType,
   };
 
-  return AsyncStorage.getItem("@AccessToken:key").then(accessToken => {
-    if (accessToken !== null) {
-      return authorizedRequest(query, variables, accessToken);
-    } else {
-      return unauthorizedRequest(query, variables);
-    }
-  });
+  const accessToken = await AsyncStorage.getItem("@AccessToken:key");
+  if (accessToken !== null) {
+    return authorizedRequest(query, variables, accessToken);
+  } else {
+    return unauthorizedRequest(query, variables);
+  }
 }
 
-export function searchMedia(mediaType, search) {
+export async function searchMedia(mediaType: MediaType, search: String) {
   var query = `
     query ($page: Int, $perPage: Int, $search: String, $mediaType: MediaType) {
       Page(page: $page, perPage: $perPage) {
@@ -153,19 +196,18 @@ export function searchMedia(mediaType, search) {
     search: search,
     page: 1,
     perPage: 5,
-    mediaType: mediaType
+    mediaType: mediaType,
   };
 
-  return AsyncStorage.getItem("@AccessToken:key").then(accessToken => {
-    if (accessToken !== null) {
-      return authorizedRequest(query, variables, accessToken);
-    } else {
-      return unauthorizedRequest(query, variables);
-    }
-  });
+  const accessToken = await AsyncStorage.getItem("@AccessToken:key");
+  if (accessToken !== null) {
+    return authorizedRequest(query, variables, accessToken);
+  } else {
+    return unauthorizedRequest(query, variables);
+  }
 }
 
-export function searchStaff(search) {
+export async function searchStaff(search: String) {
   var query = `
     query ($page: Int, $perPage: Int, $search: String) {
       Page(page: $page, perPage: $perPage) {
@@ -187,19 +229,18 @@ export function searchStaff(search) {
   var variables = {
     search: search,
     page: 1,
-    perPage: 5
+    perPage: 5,
   };
 
-  return AsyncStorage.getItem("@AccessToken:key").then(accessToken => {
-    if (accessToken !== null) {
-      return authorizedRequest(query, variables, accessToken);
-    } else {
-      return unauthorizedRequest(query, variables);
-    }
-  });
+  const accessToken = await AsyncStorage.getItem("@AccessToken:key");
+  if (accessToken !== null) {
+    return authorizedRequest(query, variables, accessToken);
+  } else {
+    return unauthorizedRequest(query, variables);
+  }
 }
 
-export function searchCharacters(search) {
+export async function searchCharacters(search: String) {
   var query = `
     query ($page: Int, $perPage: Int, $search: String) {
       Page(page: $page, perPage: $perPage) {
@@ -221,19 +262,18 @@ export function searchCharacters(search) {
   var variables = {
     search: search,
     page: 1,
-    perPage: 5
+    perPage: 5,
   };
 
-  return AsyncStorage.getItem("@AccessToken:key").then(accessToken => {
-    if (accessToken !== null) {
-      return authorizedRequest(query, variables, accessToken);
-    } else {
-      return unauthorizedRequest(query, variables);
-    }
-  });
+  const accessToken = await AsyncStorage.getItem("@AccessToken:key");
+  if (accessToken !== null) {
+    return authorizedRequest(query, variables, accessToken);
+  } else {
+    return unauthorizedRequest(query, variables);
+  }
 }
 
-export function addEntryToList(editData) {
+export async function addEntryToList(editData: EditData) {
   let query = `
     mutation ($mediaId: Int, $status: MediaListStatus, $score: Float, $progress: Int, $startDate: FuzzyDateInput, $completeDate: FuzzyDateInput, $notes: String) {
       SaveMediaListEntry(mediaId: $mediaId, status: $status, score: $score, progress: $progress, startedAt: $startDate, completedAt: $completeDate, notes: $notes) {
@@ -264,19 +304,18 @@ export function addEntryToList(editData) {
     progress: editData.progress,
     startDate: editData.startDate,
     completeDate: editData.completeDate,
-    notes: editData.notes
+    notes: editData.notes,
   };
 
-  return AsyncStorage.getItem("@AccessToken:key").then(accessToken => {
-    if (accessToken !== null) {
-      return authorizedRequest(query, variables, accessToken);
-    } else {
-      return unauthorizedRequest(query, variables);
-    }
-  });
+  const accessToken = await AsyncStorage.getItem("@AccessToken:key");
+  if (accessToken !== null) {
+    return authorizedRequest(query, variables, accessToken);
+  } else {
+    return unauthorizedRequest(query, variables);
+  }
 }
 
-export function deleteEntryFromList(mediaListId) {
+export async function deleteEntryFromList(mediaListId: number) {
   let query = `
     mutation ($mediaListId: Int) {
       DeleteMediaListEntry(id: $mediaListId) {
@@ -286,19 +325,18 @@ export function deleteEntryFromList(mediaListId) {
     `;
 
   let variables = {
-    mediaListId: mediaListId
+    mediaListId: mediaListId,
   };
 
-  return AsyncStorage.getItem("@AccessToken:key").then(accessToken => {
-    if (accessToken !== null) {
-      return authorizedRequest(query, variables, accessToken);
-    } else {
-      return unauthorizedRequest(query, variables);
-    }
-  });
+  const accessToken = await AsyncStorage.getItem("@AccessToken:key");
+  if (accessToken !== null) {
+    return authorizedRequest(query, variables, accessToken);
+  } else {
+    return unauthorizedRequest(query, variables);
+  }
 }
 
-export function getUserMediaList(userId, mediaType) {
+export async function getUserMediaList(userId: number, mediaType: MediaType) {
   let query = `
       query ($userId: Int, $mediaType: MediaType) {
         MediaListCollection(userId: $userId, type: $mediaType) {
@@ -330,19 +368,18 @@ export function getUserMediaList(userId, mediaType) {
 
   let variables = {
     userId: userId,
-    mediaType: mediaType
+    mediaType: mediaType,
   };
 
-  return AsyncStorage.getItem("@AccessToken:key").then(accessToken => {
-    if (accessToken !== null) {
-      return authorizedRequest(query, variables, accessToken);
-    } else {
-      return unauthorizedRequest(query, variables);
-    }
-  });
+  const accessToken = await AsyncStorage.getItem("@AccessToken:key");
+  if (accessToken !== null) {
+    return authorizedRequest(query, variables, accessToken);
+  } else {
+    return unauthorizedRequest(query, variables);
+  }
 }
 
-export function getUserEntryData(userId, mediaId) {
+export async function getUserEntryData(userId: number, mediaId: number) {
   let query = `
     query ($userId: Int, $mediaId: [Int]) {
       MediaList(userId: $userId, mediaId_in: $mediaId) {
@@ -371,19 +408,18 @@ export function getUserEntryData(userId, mediaId) {
 
   let variables = {
     userId: userId,
-    mediaId: mediaId
+    mediaId: mediaId,
   };
 
-  return AsyncStorage.getItem("@AccessToken:key").then(accessToken => {
-    if (accessToken !== null) {
-      return authorizedRequest(query, variables, accessToken);
-    } else {
-      return unauthorizedRequest(query, variables);
-    }
-  });
+  const accessToken = await AsyncStorage.getItem("@AccessToken:key");
+  if (accessToken !== null) {
+    return authorizedRequest(query, variables, accessToken);
+  } else {
+    return unauthorizedRequest(query, variables);
+  }
 }
 
-export function getCharacterInfo(characterId) {
+export async function getCharacterInfo(characterId: number) {
   let query = `
     query ($characterId: Int) {
       Character(id: $characterId) {
@@ -431,19 +467,18 @@ export function getCharacterInfo(characterId) {
     `;
 
   let variables = {
-    characterId: characterId
+    characterId: characterId,
   };
 
-  return AsyncStorage.getItem("@AccessToken:key").then(accessToken => {
-    if (accessToken !== null) {
-      return authorizedRequest(query, variables, accessToken);
-    } else {
-      return unauthorizedRequest(query, variables);
-    }
-  });
+  const accessToken = await AsyncStorage.getItem("@AccessToken:key");
+  if (accessToken !== null) {
+    return authorizedRequest(query, variables, accessToken);
+  } else {
+    return unauthorizedRequest(query, variables);
+  }
 }
 
-export function getStaffInfo(staffId) {
+export async function getStaffInfo(staffId: number) {
   let query = `
     query ($staffId: Int) {
       Staff(id: $staffId) {
@@ -503,19 +538,18 @@ export function getStaffInfo(staffId) {
     `;
 
   let variables = {
-    staffId: staffId
+    staffId: staffId,
   };
 
-  return AsyncStorage.getItem("@AccessToken:key").then(accessToken => {
-    if (accessToken !== null) {
-      return authorizedRequest(query, variables, accessToken);
-    } else {
-      return unauthorizedRequest(query, variables);
-    }
-  });
+  const accessToken = await AsyncStorage.getItem("@AccessToken:key");
+  if (accessToken !== null) {
+    return authorizedRequest(query, variables, accessToken);
+  } else {
+    return unauthorizedRequest(query, variables);
+  }
 }
 
-export function getViewerId() {
+export async function getViewerId() {
   let query = `
     query {
       Viewer {
@@ -525,16 +559,15 @@ export function getViewerId() {
       }
       `;
 
-  return AsyncStorage.getItem("@AccessToken:key").then(accessToken => {
-    if (accessToken !== null) {
-      return authorizedRequest(query, {}, accessToken);
-    } else {
-      return unauthorizedRequest(query, {});
-    }
-  });
+  const accessToken = await AsyncStorage.getItem("@AccessToken:key");
+  if (accessToken !== null) {
+    return authorizedRequest(query, {}, accessToken);
+  } else {
+    return unauthorizedRequest(query, {});
+  }
 }
 
-export function getBasicUserInfo(userId) {
+export async function getBasicUserInfo(userId: number) {
   let query = `
     query ($userId: Int) {
       User (id: $userId) {
@@ -548,19 +581,18 @@ export function getBasicUserInfo(userId) {
     `;
 
   let variables = {
-    userId: userId
+    userId: userId,
   };
 
-  return AsyncStorage.getItem("@AccessToken:key").then(accessToken => {
-    if (accessToken !== null) {
-      return authorizedRequest(query, variables, accessToken);
-    } else {
-      return unauthorizedRequest(query, variables);
-    }
-  });
+  const accessToken = await AsyncStorage.getItem("@AccessToken:key");
+  if (accessToken !== null) {
+    return authorizedRequest(query, variables, accessToken);
+  } else {
+    return unauthorizedRequest(query, variables);
+  }
 }
 
-export function getUserActivity(userId) {
+export async function getUserActivity(userId: number) {
   let query = `
     query ($userId: Int) {
       Page {
@@ -586,19 +618,18 @@ export function getUserActivity(userId) {
     `;
 
   let variables = {
-    userId: userId
+    userId: userId,
   };
 
-  return AsyncStorage.getItem("@AccessToken:key").then(accessToken => {
-    if (accessToken !== null) {
-      return authorizedRequest(query, variables, accessToken);
-    } else {
-      return unauthorizedRequest(query, variables);
-    }
-  });
+  const accessToken = await AsyncStorage.getItem("@AccessToken:key");
+  if (accessToken !== null) {
+    return authorizedRequest(query, variables, accessToken);
+  } else {
+    return unauthorizedRequest(query, variables);
+  }
 }
 
-export function getUserOptions(userId) {
+export async function getUserOptions(userId: number) {
   let query = `
   query ($userId: Int){
     User (id: $userId) {
@@ -636,19 +667,18 @@ export function getUserOptions(userId) {
   `;
 
   let variables = {
-    userId: userId
+    userId: userId,
   };
 
-  return AsyncStorage.getItem("@AccessToken:key").then(accessToken => {
-    if (accessToken !== null) {
-      return authorizedRequest(query, variables, accessToken);
-    } else {
-      return unauthorizedRequest(query, variables);
-    }
-  });
+  const accessToken = await AsyncStorage.getItem("@AccessToken:key");
+  if (accessToken !== null) {
+    return authorizedRequest(query, variables, accessToken);
+  } else {
+    return unauthorizedRequest(query, variables);
+  }
 }
 
-export function getThreads() {
+export async function getThreads() {
   let query = `
     {
       Page {
@@ -663,16 +693,15 @@ export function getThreads() {
 
   let variables = {};
 
-  return AsyncStorage.getItem("@AccessToken:key").then(accessToken => {
-    if (accessToken !== null) {
-      return authorizedRequest(query, variables, accessToken);
-    } else {
-      return unauthorizedRequest(query, variables);
-    }
-  });
+  const accessToken = await AsyncStorage.getItem("@AccessToken:key");
+  if (accessToken !== null) {
+    return authorizedRequest(query, variables, accessToken);
+  } else {
+    return unauthorizedRequest(query, variables);
+  }
 }
 
-export function getThreadComments(threadId, order) {
+export async function getThreadComments(threadId: number, order: ThreadOrder) {
   let query = `
     query ($threadId: Int, $order: [ThreadCommentSort]){
       Page {
@@ -686,21 +715,20 @@ export function getThreadComments(threadId, order) {
 
   let variables = {
     threadId: threadId,
-    order: order
+    order: order,
   };
 
-  return AsyncStorage.getItem("@AccessToken:key").then(accessToken => {
-    if (accessToken !== null) {
-      return authorizedRequest(query, variables, accessToken);
-    } else {
-      return unauthorizedRequest(query, variables);
-    }
-  });
+  const accessToken = await AsyncStorage.getItem("@AccessToken:key");
+  if (accessToken !== null) {
+    return authorizedRequest(query, variables, accessToken);
+  } else {
+    return unauthorizedRequest(query, variables);
+  }
 }
 
-export function toggleLike(variables) {
+export async function toggleLike(variables: LikeData) {
   let query = `
-    mutation($animeId: Int, $mangaId: Int, $characterId: Int, $staffId: Int, $studioId: Int,) {
+    mutation($animeId: Int, $mangaId: Int, $characterId: Int, $staffId: Int, $studioId: Int) {
       ToggleFavourite(animeId: $animeId, mangaId: $mangaId, characterId: $characterId, staffId: $staffId, studioId: $studioId) {
         anime {
           nodes {
@@ -731,61 +759,174 @@ export function toggleLike(variables) {
     }
     `;
 
-  return AsyncStorage.getItem("@AccessToken:key").then(accessToken => {
-    if (accessToken !== null) {
-      return authorizedRequest(query, variables, accessToken);
-    } else {
-      return unauthorizedRequest(query, variables);
-    }
-  });
+  const accessToken = await AsyncStorage.getItem("@AccessToken:key");
+  if (accessToken !== null) {
+    return authorizedRequest(query, variables, accessToken);
+  } else {
+    return unauthorizedRequest(query, variables);
+  }
 }
 
-function unauthorizedRequest(query, variables) {
-  var url = "https://graphql.anilist.co",
+export async function getNotifications() {
+  let query = `
+    {
+      Page {
+        notifications {
+          ... on AiringNotification {
+            type
+            id
+            animeId
+            episode
+            contexts
+            media {
+              title {
+                userPreferred
+              }
+            }
+          }
+          ... on FollowingNotification {
+            type
+            id
+            userId
+            context
+          }
+          ... on ActivityMessageNotification {
+            type
+            id
+            userId
+            context
+          }
+          ... on ActivityMentionNotification {
+            type
+            id
+            userId
+            context
+          }
+          ... on ActivityReplyNotification {
+            type
+            id
+            userId
+            context
+          }
+          ... on ActivityReplySubscribedNotification {
+            type
+            id
+            userId
+            context
+          }
+          ... on ActivityLikeNotification {
+            type
+            id
+            userId
+            context
+          }
+          ... on ActivityReplyLikeNotification {
+            type
+            id
+            userId
+            context
+          }
+          ... on ThreadCommentMentionNotification {
+            type
+            id
+            userId
+            context
+          }
+          ... on ThreadCommentReplyNotification {
+            type
+            id
+            userId
+            context
+          }
+          ... on ThreadCommentSubscribedNotification {
+            type
+            id
+            userId
+            context
+          }
+          ... on ThreadCommentLikeNotification {
+            type
+            id
+            userId
+            context
+          }
+          ... on ThreadLikeNotification {
+            type
+            id
+            userId
+            threadId
+            context
+          }
+          ... on RelatedMediaAdditionNotification {
+            type
+            id
+            mediaId
+            context
+            media {
+              title {
+                userPreferred
+              }
+            }
+          }
+        }
+      }
+    }
+    `;
+
+  const accessToken = await AsyncStorage.getItem("@AccessToken:key");
+  if (accessToken !== null) {
+    return authorizedRequest(query, {}, accessToken);
+  } else {
+    return unauthorizedRequest(query, {});
+  }
+}
+
+async function unauthorizedRequest(query: String, variables: Object) {
+  let url = "https://graphql.anilist.co",
     options = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Accept: "application/json"
+        Accept: "application/json",
       },
       body: JSON.stringify({
         query: query,
-        variables: variables
-      })
+        variables: variables,
+      }),
     };
 
-  return fetch(url, options)
-    .then(response => {
-      return response.json().then(function(json) {
-        return response.ok ? json : Promise.reject(json);
-      });
-    })
-    .catch(error => {
-      return error;
-    });
+  try {
+    const response = await fetch(url, options);
+    const json = await response.json();
+    return response.ok ? json : Promise.reject(json);
+  } catch (error) {
+    return error;
+  }
 }
 
-function authorizedRequest(query, variables, accessToken) {
+async function authorizedRequest(
+  query: String,
+  variables: Object,
+  accessToken: Object
+) {
   let url = "https://graphql.anilist.co",
     options = {
       method: "POST",
       headers: {
         Authorization: "Bearer " + accessToken,
         "Content-Type": "application/json",
-        Accept: "application/json"
+        Accept: "application/json",
       },
       body: JSON.stringify({
         query: query,
-        variables: variables
-      })
+        variables: variables,
+      }),
     };
-  return fetch(url, options)
-    .then(response => {
-      return response.json().then(function(json) {
-        return response.ok ? json : Promise.reject(json);
-      });
-    })
-    .catch(error => {
-      return error;
-    });
+  try {
+    const response = await fetch(url, options);
+    const json = await response.json();
+    return response.ok ? json : Promise.reject(json);
+  } catch (error) {
+    return error;
+  }
 }
